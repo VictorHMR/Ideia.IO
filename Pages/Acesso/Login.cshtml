@@ -1,0 +1,18 @@
+﻿@page 
+@model Ideia.IO.Pages.Acesso.LoginModel
+@{
+    ViewData["Title"] = "Login";
+
+}
+
+<div class="text-center">
+    @if (ViewData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["Fail"]</div>
+    }
+    <form method="post" asp-action="../Privacy">
+        <input name="Email" type="email" placeholder="Email" />
+        <input name="Senha" type="password" placeholder="Senha" />
+        <input type="submit" value="Entrar" />
+    </form>
+</div>
