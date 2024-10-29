@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ideia.IO.Models
 {
@@ -11,5 +12,11 @@ namespace Ideia.IO.Models
         public string? Email { get; set; }
         [Required]
         public string? Senha { get; set; }
+
+        public byte[]? ImgPerfil { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImgPerfilFile { get; set; }  // Propriedade temporária para upload de arquivo
+
     }
 }

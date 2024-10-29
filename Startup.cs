@@ -26,6 +26,7 @@ namespace Ideia.IO
             services.AddMvc()
                 .AddRazorPagesOptions(options =>
                 {
+                    options.Conventions.AuthorizePage("/Acesso/PerfilGeral");
                     options.RootDirectory = "/Pages";
                 });
 
@@ -53,8 +54,8 @@ namespace Ideia.IO
 
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

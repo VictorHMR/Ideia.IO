@@ -1,0 +1,36 @@
+﻿@page
+@model Ideia.IO.Pages.Acesso.PerfilGeralModel
+@{
+}
+
+<div class="text-center">
+    @if (ViewData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["Fail"]</div>
+    }
+    <form method="post" asp-action="../Privacy" enctype="multipart/form-data">
+        <div>
+            <img id="profileImage" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Usuario?.ImgPerfil ?? new byte[0])"
+                 alt="Foto de Perfil" style="width: 150px; height: 150px; border-radius: 50%;" />
+        </div>
+        <input asp-for="Usuario!.ImgPerfilFile" type="file" accept="image/png, image/jpeg, image/gif" />
+        <input asp-for="Usuario!.NomeCompleto" type="text" placeholder="Nome Completo" />
+        <input asp-for="Usuario!.Email" type="email" placeholder="Email" />
+        <input asp-for="Usuario!.Senha" type="password" value="@Model.Usuario!.Senha" placeholder="Senha" />
+        
+        <input type="submit" value="Salvar" />
+    </form>
+
+    <script>
+        document.getElementById("Usuario_ImgPerfilFile").addEventListener("change", function (event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("profileImage").src = e.target.result; 
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+</div>

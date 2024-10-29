@@ -44,7 +44,7 @@ namespace Ideia.IO.Pages.Acesso
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(authScheme, principal);
 
-            return RedirectToPage("/Privacy");
+            return RedirectToPage("/Index");
 
         }
 

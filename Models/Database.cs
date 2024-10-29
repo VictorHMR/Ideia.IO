@@ -43,6 +43,10 @@ namespace Ideia.IO.Models
                .Property(x => x.Senha)
                .HasMaxLength(15)
                .IsRequired();
+
+            modelBuilder.Entity<Usuario>()
+               .Property(p => p.ImgPerfil)
+                .HasColumnType("BLOB");
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Ideia.IO.Pages.Acesso
                 ViewData["Fail"] = "Email já cadastrado em outra conta!" ;
                 return Page();
             }
-            return Redirect("/Login");
+            return Redirect("/Acesso/Login");
         }
     }
 }
