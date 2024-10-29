@@ -20,7 +20,7 @@ namespace Ideia.IO
 
             services.AddRouting(options =>
             {
-                options.LowercaseUrls = true;
+                options.LowercaseUrls = false;
             });
 
             services.AddMvc()

@@ -1,0 +1,24 @@
+﻿@page "/Projetos/{IdProjeto?}"
+@model Ideia.IO.Pages.Projetos.ProjetosModel
+@{
+}
+<div class="text-center">
+    @if (ViewData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["Fail"]</div>
+    }
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" />
+    <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" />
+    <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" />
+        @if (ViewData["Action"] == "Create")
+        {
+            <input type="submit" value="Criar" />
+        }
+        else
+        {
+            <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
+            <input asp-page-handler="Update" type="submit" value="Salvar" />
+        }
+    </form>
+</div>
