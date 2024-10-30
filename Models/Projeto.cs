@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ideia.IO.Models
 {
@@ -14,6 +15,7 @@ namespace Ideia.IO.Models
         [Required]
         public DateTime? DtCriacao{ get; set; }
         public int IdUsuAutor { get; set; }
+        
 
     }
 }

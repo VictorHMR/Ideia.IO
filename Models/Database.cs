@@ -12,6 +12,7 @@ namespace Ideia.IO.Models
 
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Projeto> Projeto { get; set; }
+        public DbSet<ImagemProjeto> ImagemProjeto { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,7 +53,7 @@ namespace Ideia.IO.Models
 
 
             modelBuilder.Entity<Projeto>()
-                .ToTable("Projetos");
+                .ToTable("Projeto");
 
             modelBuilder.Entity<Projeto>()
                 .HasKey(x => x.Id);
@@ -82,6 +83,30 @@ namespace Ideia.IO.Models
             modelBuilder.Entity<Projeto>()
                 .Property(x => x.IdUsuAutor)
                 .IsRequired();
+
+
+            modelBuilder.Entity<ImagemProjeto>()
+                .ToTable("ImagemProjeto");
+
+            modelBuilder.Entity<ImagemProjeto>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<ImagemProjeto>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<ImagemProjeto>()
+               .Property(p => p.Imagem)
+               .HasColumnType("BLOB");
+
+            modelBuilder.Entity<ImagemProjeto>()
+               .Property(x => x.NrOrdem)
+               .IsRequired();
+
+            modelBuilder.Entity<ImagemProjeto>()
+               .Property(x => x.IdProjeto)
+               .IsRequired();
 
         }
     }

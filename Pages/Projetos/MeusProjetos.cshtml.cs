@@ -24,10 +24,10 @@ namespace Ideia.IO.Pages.Projetos
 
         public IActionResult OnPostDelete(int IdProjeto)
         {
+            _db.ImagemProjeto.RemoveRange(_db.ImagemProjeto.Where(x => x.IdProjeto == IdProjeto).ToList());
             _db.Projeto.Remove(_db.Projeto.Find(IdProjeto));
             _db.SaveChanges();
 
-            // Redireciona após a exclusão
             return RedirectToPage();
         }
     }

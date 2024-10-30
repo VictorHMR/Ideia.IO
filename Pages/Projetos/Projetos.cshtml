@@ -7,13 +7,18 @@
     {
         <div class="alert alert-danger">@ViewData["Fail"]</div>
     }
-<form method="post" enctype="multipart/form-data">
-    <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" />
-    <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" />
-    <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" />
+
+    <!-- Formulário para edição ou criação de projeto -->
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" />
+        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" />
+        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" />
+
         @if (ViewData["Action"] == "Create")
         {
             <input type="submit" value="Criar" />
+            <hr />
+            <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" />
         }
         else
         {
@@ -21,4 +26,106 @@
             <input asp-page-handler="Update" type="submit" value="Salvar" />
         }
     </form>
+    @if(Model.Projeto is not null)
+    {
+        <hr/>
+        <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
+            <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+            <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+        </form>
+        <div id="previewImagens" style="display:flex;justify-content:center"></div>
+        <hr />
+        <h1>Imagens</h1>
+        <!-- Exibição das imagens já salvas no banco de dados -->
+        @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
+        {
+            <div style="display:flex;justify-content:center">
+                @foreach (var imagem in Model.ImagemProjeto)
+                {
+                    <div>
+                        <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>Nenhuma imagem disponível para este projeto.</p>
+        }
+    }
+    else
+    {
+        <hr />
+        <h1>Imagens</h1>
+        <div id="previewImagens" style="display:flex;justify-content:center"></div>
+    }
 </div>
+
+<script>
+    var imagensSelecionadas = [];
+
+    function carregarImagens(input) {
+        var container = document.getElementById('previewImagens');
+        container.innerHTML = ""; // Limpa o preview anterior
+
+        // Limpa a lista de imagens selecionadas
+        imagensSelecionadas = [];
+
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files[i]; // Captura o arquivo atual
+            let reader = new FileReader();
+
+            reader.onload = function (e) {
+                // Cria o preview da imagem
+                var imgPreview = document.createElement("div");
+                imgPreview.setAttribute("data-index", i); // Atribui um índice único para controle
+
+                imgPreview.innerHTML = `
+            <div style="display:flex;flex-direction:column;margin:10px;height:200px">
+                <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                    <button class="btn btn-danger" type="button" onclick="removerImagem(${i})" >Remover</button>
+            </div>`;
+    
+
+                container.appendChild(imgPreview);
+            };
+
+            reader.readAsDataURL(file);
+            imagensSelecionadas.push(file); // Adiciona a imagem à lista de arquivos
+        }
+    }
+
+
+
+    function removerImagem(index) {
+        // Remover do preview
+        var container = document.getElementById('previewImagens');
+        var imgPreview = container.querySelector(`[data-index="${index}"]`);
+        if (imgPreview) {
+            imgPreview.remove();
+        }
+
+        // Remover da lista de imagens selecionadas
+        imagensSelecionadas.splice(index, 1);
+
+        // Atualiza o input de arquivo para refletir a nova lista de imagens
+        var input = document.getElementById('inputImagens'); // ID do input do tipo file
+        var dataTransfer = new DataTransfer();
+
+        // Adiciona de volta os arquivos restantes ao input
+        imagensSelecionadas.forEach(function (file) {
+            dataTransfer.items.add(file);
+        });
+
+        input.files = dataTransfer.files; // Atualiza o input com a nova lista de arquivos
+    }
+
+
+
+</script>
+
+
