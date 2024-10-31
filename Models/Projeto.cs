@@ -15,7 +15,9 @@ namespace Ideia.IO.Models
         [Required]
         public DateTime? DtCriacao{ get; set; }
         public int IdUsuAutor { get; set; }
-        
+
+        [NotMapped]
+        public byte[]? CapaProj { get; set; }
 
     }
 }

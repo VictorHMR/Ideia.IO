@@ -1,39 +1,46 @@
 ﻿@page "/Projetos/{IdProjeto?}"
 @model Ideia.IO.Pages.Projetos.ProjetosModel
 @{
+    bool readOnly = Convert.ToBoolean(ViewData["IsReadOnly"]);
 }
 <div class="text-center">
-    @if (ViewData["Fail"] != null)
+    @if (TempData["Fail"] != null)
     {
-        <div class="alert alert-danger">@ViewData["Fail"]</div>
+        <div class="alert alert-danger">@TempData["Fail"]</div>
     }
 
     <!-- Formulário para edição ou criação de projeto -->
     <form method="post" enctype="multipart/form-data">
-        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" />
-        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" />
-        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" />
-
-        @if (ViewData["Action"] == "Create")
+        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" required disabled="@readOnly" />
+        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" required disabled="@readOnly" />
+        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
+        @if (!readOnly)
         {
-            <input type="submit" value="Criar" />
-            <hr />
-            <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" />
-        }
-        else
-        {
-            <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
-            <input asp-page-handler="Update" type="submit" value="Salvar" />
+            @if (ViewData["Action"] == "Create")
+            {
+                <input type="submit" value="Criar" />
+                <hr />
+                <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
+            }
+            else
+            {
+                <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
+                <input asp-page-handler="Update" type="submit" value="Salvar" />
+            }
+            
         }
     </form>
     @if(Model.Projeto is not null)
     {
-        <hr/>
-        <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
-            <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
-            <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
-        </form>
-        <div id="previewImagens" style="display:flex;justify-content:center"></div>
+        @if (!readOnly)
+        {
+            <hr/>
+            <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
+                <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+                <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+            </form>
+            <div id="previewImagens" style="display:flex;justify-content:center"></div>
+        }
         <hr />
         <h1>Imagens</h1>
         <!-- Exibição das imagens já salvas no banco de dados -->
@@ -43,11 +50,20 @@
                 @foreach (var imagem in Model.ImagemProjeto)
                 {
                     <div>
-                        <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                            <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
-                            <button type="submit" class="btn btn-danger">Excluir</button>
-                        </form>
+                        @if (!readOnly)
+                        {
+                            <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                                <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            </div>
+                        }
                     </div>
                 }
             </div>

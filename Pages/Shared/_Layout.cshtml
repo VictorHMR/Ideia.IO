@@ -45,11 +45,11 @@
                                         <img id="profileImageNav" src="@src" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
 
                                     </div>
-                                    Meu Perfil
+                                    @User.FindFirst(ClaimTypes.Name).Value
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="null">Criar Projeto</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="">Criar Projeto</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/MeusProjetos">Meus Projetos</a></li>
                                 </ul>
                             </li>

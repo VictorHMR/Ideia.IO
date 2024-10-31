@@ -32,6 +32,7 @@ namespace Ideia.IO.Pages.Projetos
                 {
                     ImagemProjeto = _db.ImagemProjeto.Where(x=> x.IdProjeto == IdProjeto).ToList();
                     ViewData["Action"] = "Edit";
+                    ViewData["IsReadOnly"] = Projeto.IdUsuAutor != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
                 else
                     return Redirect("/index");
@@ -45,28 +46,37 @@ namespace Ideia.IO.Pages.Projetos
             {
                 if (projeto is not null)
                 {
-                    projeto.DtCriacao = DateTime.Now;
-                    projeto.IdUsuAutor = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    _db.Projeto.Add(projeto);
-                    _db.SaveChanges();
-                    int ordem = 1;
-                    foreach (var imagem in ImagemsUpload)
+                    if(ImagemsUpload.Count() > 0)
                     {
-                        using (var memoryStream = new MemoryStream())
+                        projeto.DtCriacao = DateTime.Now;
+                        projeto.IdUsuAutor = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                        _db.Projeto.Add(projeto);
+                        _db.SaveChanges();
+
+                        int ordem = 1;
+                        foreach (var imagem in ImagemsUpload)
                         {
-                            await imagem.CopyToAsync(memoryStream);
-                            var imagemProduto = new ImagemProjeto
+                            using (var memoryStream = new MemoryStream())
                             {
-                                Imagem = memoryStream.ToArray(),
-                                NrOrdem = ordem,
-                                IdProjeto = projeto.Id
-                            };
-                            _db.ImagemProjeto.Add(imagemProduto);
+                                await imagem.CopyToAsync(memoryStream);
+                                var imagemProduto = new ImagemProjeto
+                                {
+                                    Imagem = memoryStream.ToArray(),
+                                    NrOrdem = ordem,
+                                    IdProjeto = projeto.Id
+                                };
+                                _db.ImagemProjeto.Add(imagemProduto);
+                            }
+                            ordem++;
                         }
-                        ordem++;
+                        _db.SaveChanges();
+                        return Redirect("/Projetos/" +projeto.Id);
                     }
-                    _db.SaveChanges();
-                    return Redirect("/Projetos/" +projeto.Id);
+                    else
+                    {
+                        TempData["Fail"] = "Não é possivel criar, o projeto deve conter no mínimo 1 imagem";
+                        return RedirectToPage();
+                    }
 
                 }
             }
@@ -86,8 +96,14 @@ namespace Ideia.IO.Pages.Projetos
 
         public IActionResult OnPostDeleteImage(int IdImagem)
         {
-            _db.ImagemProjeto.Remove(_db.ImagemProjeto.Find(IdImagem));
-            _db.SaveChanges();
+            var imagem = _db.ImagemProjeto.Find(IdImagem);
+            if(_db.ImagemProjeto.Where(x=> x.IdProjeto == imagem.IdProjeto).ToList().Count() > 1)
+            {
+                _db.ImagemProjeto.Remove(imagem);
+                _db.SaveChanges();
+            }
+            else
+                TempData["Fail"] = "Não é possivel deletar, o projeto deve conter no mínimo 1 imagem";
 
             return RedirectToPage();
         }
