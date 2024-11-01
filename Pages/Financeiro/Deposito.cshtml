@@ -1,0 +1,14 @@
+﻿@page
+@model Ideia.IO.Pages.Financeiro.DepositoModel
+@{
+}
+<div class="text-center">
+    @if (ViewData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["Fail"]</div>
+    }
+    <form method="post">
+        <input type="number" name="Valor" placeholder="Quanto deseja Depositar ?" min="1" />
+        <input class="btn btn-outline-success" type="submit" value="Depositar" />
+    </form>
+</div>

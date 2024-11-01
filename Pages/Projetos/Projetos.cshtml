@@ -16,13 +16,13 @@
         <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
         @if (!readOnly)
         {
-            @if (ViewData["Action"] == "Create")
+            @if ( ViewData["Action"]?.ToString() == "Create")
             {
                 <input type="submit" value="Criar" />
                 <hr />
                 <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
             }
-            else
+            else if (ViewData["Action"]?.ToString() == "Edit")
             {
                 <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
                 <input asp-page-handler="Update" type="submit" value="Salvar" />
@@ -30,7 +30,13 @@
             
         }
     </form>
-    @if(Model.Projeto is not null)
+    @if (ViewData["Action"]?.ToString() == "Create")
+    {
+        <hr />
+        <h1>Imagens</h1>
+        <div id="previewImagens" style="display:flex;justify-content:center"></div>
+    }
+    else if (ViewData["Action"]?.ToString() == "Edit")
     {
         @if (!readOnly)
         {
@@ -39,11 +45,11 @@
                 <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
                 <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
             </form>
-            <div id="previewImagens" style="display:flex;justify-content:center"></div>
         }
+
+        <!-- Exibição das imagens já salvas no banco de dados -->
         <hr />
         <h1>Imagens</h1>
-        <!-- Exibição das imagens já salvas no banco de dados -->
         @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
         {
             <div style="display:flex;justify-content:center">
@@ -68,19 +74,39 @@
                 }
             </div>
         }
-        else
+        else 
         {
             <p>Nenhuma imagem disponível para este projeto.</p>
         }
-    }
-    else
-    {
-        <hr />
-        <h1>Imagens</h1>
-        <div id="previewImagens" style="display:flex;justify-content:center"></div>
-    }
-</div>
 
+        <!-- Botão para depósito de dinheiro -->
+    }
+
+
+</div>
+    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
+
+<div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contribuirModalLabel">Confirmar Contribuição</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Com quanto deseja contribuir para o projeto <span id="projectName"></span>? 
+            </div>
+            <div class="modal-footer">
+                <form id="contribuirForm" method="post" asp-page-handler="Contribuir">
+                    <input type="hidden" name="IdProjeto" id="projectId" value="@Model.Projeto.Id" />
+                    <input type="number" name="Valor" id="valorContribuicao" placeholder="Valor" />
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var imagensSelecionadas = [];
 
@@ -140,7 +166,10 @@
         input.files = dataTransfer.files; // Atualiza o input com a nova lista de arquivos
     }
 
-
+            const contribuirModal = document.getElementById('contribuirModal');
+            contribuirModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            });
 
 </script>
 

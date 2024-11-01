@@ -132,7 +132,35 @@ namespace Ideia.IO.Pages.Projetos
 
         }
 
+        public IActionResult OnPostContribuir(int IdProjeto, double Valor)
+        {
+            int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+            if (_db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto == null).Sum(x => x.Valor) > Valor)
+            {
+                Transacao Transacao = new Transacao
+                {
+                    Valor = Valor,
+                    IdProjeto = IdProjeto,
+                    IdUsuario = idUsuario,
+                    DtTransacao = DateTime.Now
+                };
+
+                Transacao Transacao2 = new Transacao
+                {
+                    Valor = -Valor,
+                    IdUsuario = idUsuario,
+                    DtTransacao = DateTime.Now
+                };
+                _db.Transacao.AddRange([Transacao, Transacao2]);
+                _db.SaveChanges();
+
+            }
+            else
+                TempData["Fail"] = "Saldo insuficiente para realizar essa operação";
+
+            return RedirectToPage();
+        }
 
     }
 }

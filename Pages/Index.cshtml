@@ -9,11 +9,13 @@
     @foreach(var projeto in Model.LstProjetos)
     {
         <div>
-            <p>@projeto.Titulo</p>
-            @if (projeto.CapaProj is not null)
-            {
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-            }
+            <a asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="@projeto.Id">
+                <p>@projeto.Titulo</p>
+                @if (projeto.CapaProj is not null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                }
+            </a>
         </div>
     }
 </div>

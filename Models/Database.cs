@@ -13,6 +13,7 @@ namespace Ideia.IO.Models
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Projeto> Projeto { get; set; }
         public DbSet<ImagemProjeto> ImagemProjeto { get; set; }
+        public DbSet<Transacao> Transacao { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -107,6 +108,33 @@ namespace Ideia.IO.Models
             modelBuilder.Entity<ImagemProjeto>()
                .Property(x => x.IdProjeto)
                .IsRequired();
+
+
+            modelBuilder.Entity<Transacao>()
+                .ToTable("Transacao");
+
+            modelBuilder.Entity<Transacao>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<Transacao>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<Transacao>()
+                .Property(x => x.Valor)
+                .IsRequired();
+
+            modelBuilder.Entity<Transacao>()
+                .Property(x => x.DtTransacao)
+                .IsRequired();
+
+            modelBuilder.Entity<Transacao>()
+               .Property(x => x.IdUsuario)
+               .IsRequired();
+
+            modelBuilder.Entity<Transacao>()
+               .Property(x => x.IdProjeto);
 
         }
     }
