@@ -1,0 +1,170 @@
+﻿@page "/Projetos/{Action:alpha}/{IdProjeto:int?}"
+@model Ideia.IO.Pages.Projetos.GerenciarProjetosModel
+@{
+    bool readOnly = Convert.ToBoolean(ViewData["IsReadOnly"]);
+    string Action = ViewData["Action"]?.ToString() ?? "Create";
+}
+<div class="text-center">
+    <div id="MensagemContainer">
+
+    @if (TempData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Fail"]</div>
+    }
+    </div>
+
+    <!-- Formulário para edição ou criação de projeto -->
+    <form method="post" enctype="multipart/form-data" onsubmit="return validarEnvio();">
+        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" required disabled="@readOnly" />
+        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" required disabled="@readOnly" />
+        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
+        @if (!readOnly)
+        {
+            @if (Action == "Create")
+            {
+                <input type="submit" value="Criar" />
+                <hr />
+                <input type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
+                <input type="file" id="imagensSubmit" asp-for="ImagemsUpload" style="display:none" />
+            }
+            else if (Action == "Edit")
+            {
+                <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
+                <input asp-page-handler="Update" type="submit" value="Salvar" />
+            }
+            
+        }
+    </form>
+    @if (Action == "Create")
+    {
+        <hr />
+        <h1>Imagens</h1>
+        <div id="previewImagens" style="display:flex;justify-content:center"></div>
+    }
+    else if (Action == "Edit")
+    {
+        @if (!readOnly)
+        {
+            <hr/>
+            <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
+                <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+                <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+            </form>
+        }
+
+        <!-- Exibição das imagens já salvas no banco de dados -->
+        <hr />
+        <h1>Imagens</h1>
+        @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
+        {
+            <div style="display:flex;justify-content:center">
+                @foreach (var imagem in Model.ImagemProjeto)
+                {
+                    <div>
+                        @if (!readOnly)
+                        {
+                            <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                                <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else 
+        {
+            <p>Nenhuma imagem disponível para este projeto.</p>
+        }
+
+        <!-- Botão para depósito de dinheiro -->
+    }
+
+
+</div>
+<script>
+    var imagensSelecionadas = [];
+    var qntImg = 0;
+
+    function carregarImagens(input) {
+        var container = document.getElementById('previewImagens');
+
+        // Adiciona as novas imagens ao array imagensSelecionadas
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files[i];
+            imagensSelecionadas.push(file); // Adiciona a imagem à lista de arquivos
+
+            // Cria o preview da imagem
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                var imgPreview = document.createElement("div");
+                imgPreview.setAttribute("data-index", imagensSelecionadas.length - 1); // Índice baseado no array
+
+                imgPreview.innerHTML = `
+                    <div style="display:flex;flex-direction:column;margin:10px;height:200px">
+                        <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                        <button class="btn btn-danger" type="button" onclick="removerImagem(${imagensSelecionadas.length - 1})">Remover</button>
+                    </div>`;
+                container.appendChild(imgPreview);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        atualizarImagensSubmit(); // Atualiza o campo escondido com os arquivos selecionados
+    }
+
+    function atualizarImagensSubmit() {
+        // Cria um novo DataTransfer
+        const dataTransfer = new DataTransfer();
+        imagensSelecionadas.forEach(file => dataTransfer.items.add(file));
+
+        // Atualiza o campo escondido
+        document.getElementById('imagensSubmit').files = dataTransfer.files;
+    }
+
+    function removerImagem(index) {
+        console.log(imagensSelecionadas.length)
+        if (imagensSelecionadas.length <= 1) {
+            document.getElementById('MensagemContainer').innerHTML = '<div class="alert alert-danger">Deve conter ao menos uma imagem!</div>'
+        }
+        else {
+            imagensSelecionadas.splice(index, 1); // Remove a imagem do array
+
+            // Atualiza a visualização
+            var container = document.getElementById('previewImagens');
+            container.innerHTML = ''; // Limpa o preview
+
+            // Recria o preview de acordo com as imagens restantes
+            imagensSelecionadas.forEach((file, i) => {
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    var imgPreview = document.createElement("div");
+                    imgPreview.setAttribute("data-index", i);
+
+                    imgPreview.innerHTML = `
+                        <div style="display:flex;flex-direction:column;margin:10px;height:200px">
+                            <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            <button class="btn btn-danger" type="button" onclick="removerImagem(${i})">Remover</button>
+                        </div>`;
+                    container.appendChild(imgPreview);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            atualizarImagensSubmit(); // Atualiza o campo escondido com a nova lista de arquivos
+
+        }
+    }
+
+
+
+</script>
+
+

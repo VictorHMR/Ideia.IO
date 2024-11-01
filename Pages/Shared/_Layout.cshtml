@@ -52,7 +52,9 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="">Criar Projeto</a></li>
+                                    <li><a asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null" class="dropdown-item">Criar Projeto</a></li>
+                                    
+
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/MeusProjetos">Meus Projetos</a></li>
                                 </ul>
                             </li>

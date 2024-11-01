@@ -1,95 +1,35 @@
-﻿@page "/Projetos/{IdProjeto?}"
+﻿@page "/Projetos/{IdProjeto:int}"
 @model Ideia.IO.Pages.Projetos.ProjetosModel
 @{
-    bool readOnly = Convert.ToBoolean(ViewData["IsReadOnly"]);
-    string Action = ViewData["Action"]?.ToString() ?? "Create";
 }
-<div class="text-center">
-    @if (TempData["Fail"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Fail"]</div>
-    }
+@if (TempData["Fail"] != null)
+{
+    <div class="alert alert-danger">@TempData["Fail"]</div>
+}
 
-    <!-- Formulário para edição ou criação de projeto -->
-    <form method="post" enctype="multipart/form-data">
-        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" required disabled="@readOnly" />
-        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" required disabled="@readOnly" />
-        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
-        @if (!readOnly)
+<h1>Titulo: @Model.Projeto.Titulo</h1>
+<p>@Model.Projeto.Descricao</p>
+<h3>Criado em: @Model.Projeto.DtCriacao?.ToString("dd/MM/yyyy")</h3>
+<h3>Meta: @Model.Projeto.Meta?.ToString("C")</h3>
+<h3>Obtido: @Model.Transacoes.Sum(x => x.Valor).ToString("C")</h3>
+@if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
+{
+    <div style="display:flex;justify-content:center">
+        @foreach (var imagem in Model.ImagemProjeto)
         {
-            @if (Action == "Create")
-            {
-                <input type="submit" value="Criar" />
-                <hr />
-                <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
-            }
-            else if (Action == "Edit")
-            {
-                <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
-                <input asp-page-handler="Update" type="submit" value="Salvar" />
-            }
-            
-        }
-    </form>
-    @if (Action == "Create")
-    {
-        <hr />
-        <h1>Imagens</h1>
-        <div id="previewImagens" style="display:flex;justify-content:center"></div>
-    }
-    else if (Action == "Edit")
-    {
-        @if (!readOnly)
-        {
-            <hr/>
-            <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
-                <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
-                <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
-            </form>
-        }
-
-        <!-- Exibição das imagens já salvas no banco de dados -->
-        <hr />
-        <h1>Imagens</h1>
-        @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
-        {
-            <div style="display:flex;justify-content:center">
-                @foreach (var imagem in Model.ImagemProjeto)
-                {
-                    <div>
-                        @if (!readOnly)
-                        {
-                            <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                                <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
-                                <button type="submit" class="btn btn-danger">Excluir</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                            </div>
-                        }
-                    </div>
-                }
+            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
             </div>
         }
-        else 
-        {
-            <p>Nenhuma imagem disponível para este projeto.</p>
-        }
-
-        <!-- Botão para depósito de dinheiro -->
-    }
-
-
-</div>
-@if (Action == "Edit")
+    </div>
+}
+else
 {
-    <h3>Saldo: @Model.Transacoes.Sum(x => x.Valor).ToString("C")</h3>
-    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
-    <div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
+    <p>Nenhuma imagem disponível para este projeto.</p>
+}
+
+<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
+<div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -97,7 +37,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Com quanto deseja contribuir para o projeto <span id="projectName"></span>? 
+                Com quanto deseja contribuir para o projeto <span id="projectName"></span>?
             </div>
             <div class="modal-footer">
                 <form id="contribuirForm" method="post" asp-page-handler="Contribuir">
@@ -110,75 +50,10 @@
         </div>
     </div>
 </div>
-}
+
 <script>
-    var imagensSelecionadas = [];
-
-    function carregarImagens(input) {
-        var container = document.getElementById('previewImagens');
-        container.innerHTML = ""; // Limpa o preview anterior
-
-        // Limpa a lista de imagens selecionadas
-        imagensSelecionadas = [];
-
-        for (let i = 0; i < input.files.length; i++) {
-            let file = input.files[i]; // Captura o arquivo atual
-            let reader = new FileReader();
-
-            reader.onload = function (e) {
-                // Cria o preview da imagem
-                var imgPreview = document.createElement("div");
-                imgPreview.setAttribute("data-index", i); // Atribui um índice único para controle
-
-                imgPreview.innerHTML = `
-            <div style="display:flex;flex-direction:column;margin:10px;height:200px">
-                <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                    <button class="btn btn-danger" type="button" onclick="removerImagem(${i})" >Remover</button>
-            </div>`;
-    
-
-                container.appendChild(imgPreview);
-            };
-
-            reader.readAsDataURL(file);
-            imagensSelecionadas.push(file); // Adiciona a imagem à lista de arquivos
-        }
-    }
-
-
-
-    function removerImagem(index) {
-        // Remover do preview
-        var container = document.getElementById('previewImagens');
-        var imgPreview = container.querySelector(`[data-index="${index}"]`);
-        if (imgPreview) {
-            imgPreview.remove();
-        }
-
-        // Remover da lista de imagens selecionadas
-        imagensSelecionadas.splice(index, 1);
-
-        // Atualiza o input de arquivo para refletir a nova lista de imagens
-        var input = document.getElementById('inputImagens'); // ID do input do tipo file
-        var dataTransfer = new DataTransfer();
-
-        // Adiciona de volta os arquivos restantes ao input
-        imagensSelecionadas.forEach(function (file) {
-            dataTransfer.items.add(file);
-        });
-
-        input.files = dataTransfer.files; // Atualiza o input com a nova lista de arquivos
-    }
-
-</script>
-@if (Action == "Edit")
-{
-    <script>
     const contribuirModal = document.getElementById('contribuirModal');
     contribuirModal.addEventListener('show.bs.modal', function (event) {
     const button = event.relatedTarget;
     });
-    </script>
-}
-
-
+</script>
