@@ -1,4 +1,4 @@
-﻿using Ideia.IO.Models;
+﻿using Ideia.IO.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 
@@ -16,7 +16,7 @@ namespace Ideia.IO
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddDbContext<Database>();
+            services.AddDbContext<DbContext>();
 
             services.AddRouting(options =>
             {

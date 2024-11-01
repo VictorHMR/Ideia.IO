@@ -1,3 +1,4 @@
+using Ideia.IO.Database;
 using Ideia.IO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,10 +8,10 @@ namespace Ideia.IO.Pages.Financeiro
 {
     public class DepositoModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
 
-        public DepositoModel(Database database)
+        public DepositoModel(DbContext database)
         {
             _db = database;
         }

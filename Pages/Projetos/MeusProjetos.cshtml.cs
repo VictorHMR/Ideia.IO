@@ -1,3 +1,4 @@
+using Ideia.IO.Database;
 using Ideia.IO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,11 +9,11 @@ namespace Ideia.IO.Pages.Projetos
 
     public class MeusProjetosModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
         public List<Projeto>? LstProjetos { get; set; }
 
-        public MeusProjetosModel(Database database)
+        public MeusProjetosModel(DbContext database)
         {
             _db = database;
         }

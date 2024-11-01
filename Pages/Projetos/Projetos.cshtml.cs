@@ -1,3 +1,4 @@
+using Ideia.IO.Database;
 using Ideia.IO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,7 +10,7 @@ namespace Ideia.IO.Pages.Projetos
 {
     public class ProjetosModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
         public Projeto? Projeto { get; set; }
         [BindProperty]
@@ -17,7 +18,9 @@ namespace Ideia.IO.Pages.Projetos
         [BindProperty]
         public List<IFormFile> ImagemsUpload { get; set; }
 
-        public ProjetosModel(Database database)
+        public List<Transacao> Transacoes { get; set; }
+
+        public ProjetosModel(DbContext database)
         {
             _db = database;
         }
@@ -31,6 +34,7 @@ namespace Ideia.IO.Pages.Projetos
                 if (Projeto is not null)
                 {
                     ImagemProjeto = _db.ImagemProjeto.Where(x=> x.IdProjeto == IdProjeto).ToList();
+                    Transacoes = _db.Transacao.Where(x => x.IdProjeto == IdProjeto).ToList();
                     ViewData["Action"] = "Edit";
                     ViewData["IsReadOnly"] = Projeto.IdUsuAutor != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 }
@@ -136,7 +140,7 @@ namespace Ideia.IO.Pages.Projetos
         {
             int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            if (_db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto == null).Sum(x => x.Valor) > Valor)
+            if (_db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto == null).Sum(x => x.Valor) >= Valor)
             {
                 Transacao Transacao = new Transacao
                 {

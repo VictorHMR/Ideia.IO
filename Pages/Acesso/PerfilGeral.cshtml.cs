@@ -1,3 +1,4 @@
+using Ideia.IO.Database;
 using Ideia.IO.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,12 @@ namespace Ideia.IO.Pages.Acesso
     [Authorize]
     public class PerfilGeralModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
         [BindProperty]
         public Usuario? Usuario { get; set; }
 
-        public PerfilGeralModel(Database database)
+        public PerfilGeralModel(DbContext database)
         {
             _db = database;
         }

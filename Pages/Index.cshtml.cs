@@ -1,3 +1,4 @@
+using Ideia.IO.Database;
 using Ideia.IO.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,12 +7,12 @@ namespace Ideia.IO.Pages
 {
     public class IndexModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
         public List<Projeto>? LstProjetos { get; set; }
         public int TotalProj { get; set; }
 
-        public IndexModel(Database database)
+        public IndexModel(DbContext database)
         {
             _db = database;
         }

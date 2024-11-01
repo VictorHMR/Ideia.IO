@@ -1,15 +1,17 @@
 using Ideia.IO.Models;
+using Ideia.IO.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using DbContext = Ideia.IO.Database.DbContext;
 
 namespace Ideia.IO.Pages.Acesso
 {
     public class RegistroModel : PageModel
     {
-        public readonly Database _db;
+        public readonly DbContext _db;
 
-        public RegistroModel(Database database)
+        public RegistroModel(DbContext database)
         {
             _db = database;
         }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ideia.IO.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Ideia.IO.Models
+namespace Ideia.IO.Database
 {
-    public class Database: DbContext
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         protected const string ConnectionString = @"Data Source=Database\\sqlite.db";
-        public Database()
+        public DbContext()
         {
 
         }

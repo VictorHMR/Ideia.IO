@@ -2,6 +2,7 @@
 @model Ideia.IO.Pages.Projetos.ProjetosModel
 @{
     bool readOnly = Convert.ToBoolean(ViewData["IsReadOnly"]);
+    string Action = ViewData["Action"]?.ToString() ?? "Create";
 }
 <div class="text-center">
     @if (TempData["Fail"] != null)
@@ -16,13 +17,13 @@
         <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
         @if (!readOnly)
         {
-            @if ( ViewData["Action"]?.ToString() == "Create")
+            @if (Action == "Create")
             {
                 <input type="submit" value="Criar" />
                 <hr />
                 <input asp-for="ImagemsUpload" type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
             }
-            else if (ViewData["Action"]?.ToString() == "Edit")
+            else if (Action == "Edit")
             {
                 <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
                 <input asp-page-handler="Update" type="submit" value="Salvar" />
@@ -30,13 +31,13 @@
             
         }
     </form>
-    @if (ViewData["Action"]?.ToString() == "Create")
+    @if (Action == "Create")
     {
         <hr />
         <h1>Imagens</h1>
         <div id="previewImagens" style="display:flex;justify-content:center"></div>
     }
-    else if (ViewData["Action"]?.ToString() == "Edit")
+    else if (Action == "Edit")
     {
         @if (!readOnly)
         {
@@ -84,9 +85,11 @@
 
 
 </div>
+@if (Action == "Edit")
+{
+    <h3>Saldo: @Model.Transacoes.Sum(x => x.Valor).ToString("C")</h3>
     <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
-
-<div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
+    <div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -107,6 +110,7 @@
         </div>
     </div>
 </div>
+}
 <script>
     var imagensSelecionadas = [];
 
@@ -166,11 +170,15 @@
         input.files = dataTransfer.files; // Atualiza o input com a nova lista de arquivos
     }
 
-            const contribuirModal = document.getElementById('contribuirModal');
-            contribuirModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            });
-
 </script>
+@if (Action == "Edit")
+{
+    <script>
+    const contribuirModal = document.getElementById('contribuirModal');
+    contribuirModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    });
+    </script>
+}
 
 
