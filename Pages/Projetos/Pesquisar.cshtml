@@ -1,0 +1,48 @@
+﻿@page
+@model Ideia.IO.Pages.Projetos.PesquisarModel
+@{
+}
+
+<h3 class="display-4">Total de Projetos: @Model.TotalProj</h3>
+<h3 class="display-4">Quantidade de Paginas: @Model.TotalPaginas</h3>
+<h3 class="display-4">Página: @Model.Pesquisa.Pagina</h3>
+@foreach (var projeto in Model.LstProjetos)
+{
+    <div>
+        <a asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="@projeto.Id">
+            <p>@projeto.Titulo</p>
+            @if (projeto.CapaProj is not null)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+            }
+        </a>
+    </div>
+}
+
+<form method="get" asp-page-handler="Pesquisar">
+    <input type="hidden" asp-for="Pesquisa!.Pesquisa" />
+    <input type="hidden" id="idPagina" asp-for="Pesquisa!.Pagina" value="@Model.Pesquisa.Pagina" />
+    @if (Model.Pesquisa.Pagina > 1)
+    {
+        <button id="btnAnterior" type="submit" class="btn btn-danger" onclick="PaginaAnterior()">Anterior</button>
+    }
+    @if(Model.Pesquisa.Pagina != Model.TotalPaginas)
+    {
+        <button id="btnProximo" type="submit" class="btn btn-danger" onclick="ProximaPagina()">Proxima</button>
+    }
+</form>
+<script>
+
+    function ProximaPagina() {
+        let paginaAtual = parseInt(document.getElementById('idPagina').value, 10); 
+        if (paginaAtual < @Model.TotalPaginas)
+            document.getElementById('idPagina').value = paginaAtual + 1;
+    }
+
+    function PaginaAnterior() {
+        let paginaAtual = parseInt(document.getElementById('idPagina').value, 10); 
+        if(paginaAtual > 1)
+            document.getElementById('idPagina').value = paginaAtual - 1;
+    }
+</script>
+
