@@ -5,7 +5,35 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Total de Projetos: @Model.TotalProj</h1>
+    <main>
+        <section class="intro">
+            <h2>Desenvolva em conjunto!</h2>
+            <p>Em nossa plataforma</p>
+        </section>
+
+        <section class="stats-container">
+            <div class="stat-box">
+                <p>@Model.TotalProj</p>
+                <h3>Projetos</h3>
+            </div>
+            <div class="stat-box">
+                <p>@Model.TotalArrec.ToString("C")</p>
+                <h3>Arrecadado</h3>
+            </div>
+            <div class="stat-box">
+                <p>@Model.ProjConcluidos</p>
+                <h3>Projetos concluídos</h3>
+            </div>
+        </section>
+
+        <section class="projects-container">
+            <div class="project-box">Projeto 1</div>
+            <div class="project-box">Projeto 2</div>
+            <div class="project-box">Projeto 3</div>
+            <div class="project-box">Projeto 4</div>
+        </section>
+    </main>
+
     @foreach(var projeto in Model.LstProjetos)
     {
         <div>

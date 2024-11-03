@@ -1,0 +1,87 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Estilo para título e subtítulo */
+.intro {
+    text-align: center;
+    margin: 40px 0 20px;
+}
+
+.intro h2 {
+    font-size: 28px;
+    color: white;
+}
+
+.intro p {
+    font-size: 18px;
+    color: #555;
+}
+
+/* Quadro com três divisões */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: #122A43;
+    border-radius: 8px;
+}
+
+.stat-box {
+    width: 33%;
+    text-align: center;
+    padding: 20px;
+}
+.stat-box:not(:last-child) {
+    border-right: 3px solid #ffffff33; 
+}
+
+.stat-box h3 {
+    font-size: 24px;
+    color: white;
+}
+
+.stat-box p {
+    font-size: 48px;
+    color: #FFDD00;
+    font-weight: bold;
+}
+
+/* Seção dos projetos mais visitados */
+.projects-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 40px auto;
+    max-width: 800px;
+}
+
+.project-box {
+    background-color: #e0e0e0;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+}

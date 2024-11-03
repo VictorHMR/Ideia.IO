@@ -15,9 +15,12 @@ namespace Ideia.IO.Models
         [Required]
         public DateTime? DtCriacao{ get; set; }
         public int IdUsuAutor { get; set; }
+        public bool Ativo { get; set; } = true;
 
         [NotMapped]
         public byte[]? CapaProj { get; set; }
+        [NotMapped]
+        public double? Contribuido{ get; set; }
 
     }
 }

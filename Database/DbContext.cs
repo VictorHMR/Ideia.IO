@@ -86,6 +86,10 @@ namespace Ideia.IO.Database
                 .Property(x => x.IdUsuAutor)
                 .IsRequired();
 
+            modelBuilder.Entity<Projeto>()
+                .Property(x => x.Ativo)
+                .IsRequired();
+
 
             modelBuilder.Entity<ImagemProjeto>()
                 .ToTable("ImagemProjeto");
