@@ -7,7 +7,7 @@
 <div class="text-center">
     <main>
         <section class="intro">
-            <h2>Desenvolva em conjunto!</h2>
+            <h2>Desenvolva ideias em conjunto!</h2>
             <p>Em nossa plataforma</p>
         </section>
 
@@ -25,25 +25,42 @@
                 <h3>Projetos concluídos</h3>
             </div>
         </section>
+        <section class="intro2">
+            <h2>Confira os mais visitados!</h2>
+        </section>
 
         <section class="projects-container">
-            <div class="project-box">Projeto 1</div>
-            <div class="project-box">Projeto 2</div>
-            <div class="project-box">Projeto 3</div>
-            <div class="project-box">Projeto 4</div>
+            @foreach(var projeto in Model.LstProjetos)
+            {
+                string srcPerfil = projeto.ImgAutor is not null ? "data:image/jpeg;base64," + Convert.ToBase64String(projeto.ImgAutor) : Url.Content("~/img/perfil-de-usuario.png");
+                int diasPassados = (int)(DateTime.Now - (projeto.DtCriacao ?? DateTime.Now)).TotalDays;
+                <a asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="@projeto.Id" style="text-decoration:none">
+                    <div class="project-box">
+                        <div class="project-card">
+                            @if (projeto.CapaProj is not null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto"  />
+                            }
+                        </div>
+                        <div class="project-title">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; display: inline-block;">
+                                <img id="profileImageNav" src="@srcPerfil" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            <span>
+                                <p class="titulo">@projeto.Titulo</p>
+                                <p><b>Autor:</b> @projeto.Autor</p>
+                            </span>
+                        </div>
+                        <div class="project-infos">
+                            <p>@(diasPassados == 0 ? "Criado hoje" : "Criado a " + diasPassados + " dias")</p>
+                            <p>@projeto.PorcentagemConcluida.ToString()% Arrecadado</p>
+                        </div>
+                        <p>@projeto.Descricao</p>
+
+                    </div>
+                </a>
+            }
         </section>
     </main>
 
-    @foreach(var projeto in Model.LstProjetos)
-    {
-        <div>
-            <a asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="@projeto.Id">
-                <p>@projeto.Titulo</p>
-                @if (projeto.CapaProj is not null)
-                {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                }
-            </a>
-        </div>
-    }
 </div>

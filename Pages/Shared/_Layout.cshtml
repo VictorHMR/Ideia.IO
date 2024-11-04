@@ -15,7 +15,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3" style="height:70px;background-color:#0F1D2B;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3" style="height:70px;background-color:#0F1D2B;border-bottom: 4px solid #123252">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">Ideia.IO</a>
                 <form method="get" asp-page="/Projetos/Pesquisar">
@@ -43,8 +43,10 @@
                             string src = usuario?.ImgPerfil is not null ? "data:image/jpeg;base64," + Convert.ToBase64String(usuario.ImgPerfil) : Url.Content("~/img/perfil-de-usuario.png");
                             double Saldo = _db.Transacao.Where(x => x.IdUsuario == usuario.Id && x.IdProjeto == null).Sum(x => x.Valor);
                             
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-page="/Financeiro/Deposito">@Saldo.ToString("C")</a>
+                            <li class="nav-item" style="margin-right:10px;">
+                                <a class="nav-link" style="font-weight:bold" asp-area="" asp-page="/Financeiro/Deposito">
+                                    Saldo: &nbsp;                                  <span style="color:#FFDD00;">@Saldo.ToString("C")</span>
+                                </a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,17 +54,15 @@
                                         <img id="profileImageNav" src="@src" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
 
                                     </div>
-                                    @User.FindFirst(ClaimTypes.Name).Value
+                                    <b>@User.FindFirst(ClaimTypes.Name).Value</b>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
                                     <li><a asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null" class="dropdown-item">Criar Projeto</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/MeusProjetos">Meus Projetos</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-MinhasContribuicoes="@true">Minhas contribuíções</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/Logout">Sair</a></li>
                                 </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-page="/Acesso/Logout">Sair</a>
                             </li>
                         }
                     </ul>
@@ -78,7 +78,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted" style="border-top: 4px solid #123252">
         <div class="container">
             &copy; 2024 - Ideia.IO - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>

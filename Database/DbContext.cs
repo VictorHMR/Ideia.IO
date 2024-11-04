@@ -90,6 +90,10 @@ namespace Ideia.IO.Database
                 .Property(x => x.Ativo)
                 .IsRequired();
 
+            modelBuilder.Entity<Projeto>()
+                .Property(x => x.Visitas)
+                .IsRequired();
+
 
             modelBuilder.Entity<ImagemProjeto>()
                 .ToTable("ImagemProjeto");

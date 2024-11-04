@@ -25,6 +25,8 @@ namespace Ideia.IO.Pages.Projetos
             Projeto = _db.Projeto.Find(IdProjeto);
             if (Projeto is not null)
             {
+                Projeto.Visitas++;
+                _db.SaveChanges();
                 ImagemProjeto = _db.ImagemProjeto.Where(x => x.IdProjeto == IdProjeto).ToList();
                 Transacoes = _db.Transacao.Where(x => x.IdProjeto == IdProjeto).ToList();
                 return Page();
