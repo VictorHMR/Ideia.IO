@@ -52,10 +52,12 @@
                             </span>
                         </div>
                         <div class="project-infos">
-                            <p>@(diasPassados == 0 ? "Criado hoje" : "Criado a " + diasPassados + " dias")</p>
-                            <p>@projeto.PorcentagemConcluida.ToString()% Arrecadado</p>
+                            <span>
+                                <p>@(diasPassados == 0 ? "Criado hoje" : "Criado a " + diasPassados + " dias")</p>
+                                <p>@projeto.PorcentagemConcluida.ToString()% Arrecadado</p>
+                            </span>
+                            <p>@projeto.Descricao</p>
                         </div>
-                        <p>@projeto.Descricao</p>
 
                     </div>
                 </a>

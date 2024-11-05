@@ -15,26 +15,39 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark box-shadow mb-3" style="height:70px;background-color:#0F1D2B;border-bottom: 4px solid #123252">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Ideia.IO</a>
-                <form method="get" asp-page="/Projetos/Pesquisar">
-                    <input type="text" name="Pesquisa.Pesquisa" placeholder="Digite sua pesquisa" />
-                    <button type="submit">Pesquisar</button>
-                </form>
+        <nav class="navbar navbar-expand-sm navbar-dark box-shadow mb-3" style="height:70px;background-color:#0F1D2B;border-bottom: 4px solid #123252">
+            <div class="container d-flex justify-content-around align-items-center">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <!-- Marca -->
+                <a class="navbar-brand" asp-area="" asp-page="/Index" style="width:33%;font-weight:bold;font-size:35px">Ideia.IO</a>
+                <!-- Botão de navegação responsiva -->
+                <div style="width:33%;">
+                    <form method="get" asp-page="/Projetos/Pesquisar" class="d-sm-flex flex-grow-1 justify-content-center">
+                        <input type="text" name="Pesquisa.Pesquisa" placeholder="Digite sua pesquisa" class="form-control" style="width:100%" />
+                        <button type="submit" class="btn btn-secondary ms-2">Buscar</button>
+                    </form>
+                </div>
+                <!-- Opções de navegação -->
+                <div style="width:33%" class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <!-- Formulário de pesquisa centralizado -->
+
                     <ul class="navbar-nav ms-auto align-items-center">
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary" asp-area="" asp-page="/Acesso/Login">Login</a>
+                                <a class="btn-entrar" asp-area="" asp-page="/Acesso/Login">
+                                    <img src="@Url.Content("~/svg/person-fill.svg")" />
+                                    Entrar
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-page="/Acesso/Registro">Registrar-se</a>
+                            <li class="nav-item ms-3">
+                                <a class="btn-registrar" asp-area="" asp-page="/Acesso/Registro">
+                                    Registrar-se
+                                </a>
                             </li>
                         }
                         else
@@ -42,36 +55,36 @@
                             Usuario usuario = _db.Usuario.Find(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
                             string src = usuario?.ImgPerfil is not null ? "data:image/jpeg;base64," + Convert.ToBase64String(usuario.ImgPerfil) : Url.Content("~/img/perfil-de-usuario.png");
                             double Saldo = _db.Transacao.Where(x => x.IdUsuario == usuario.Id && x.IdProjeto == null).Sum(x => x.Valor);
-                            
-                            <li class="nav-item" style="margin-right:10px;">
+
+                            <li class="nav-item me-3">
                                 <a class="nav-link" style="font-weight:bold" asp-area="" asp-page="/Financeiro/Deposito">
-                                    Saldo: &nbsp;                                  <span style="color:#FFDD00;">@Saldo.ToString("C")</span>
+                                    Saldo: &nbsp; <span style="color:#FFDD00;">@Saldo.ToString("C")</span>
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div style="width: 35px; height: 35px; border-radius: 50%; overflow: hidden; display: inline-block;">
                                         <img id="profileImageNav" src="@src" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
-
                                     </div>
+                                    &nbsp;
                                     <b>@User.FindFirst(ClaimTypes.Name).Value</b>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
                                     <li><a asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null" class="dropdown-item">Criar Projeto</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/MeusProjetos">Meus Projetos</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-MinhasContribuicoes="@true">Minhas contribuíções</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-MinhasContribuicoes="@true">Minhas contribuições</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/Logout">Sair</a></li>
                                 </ul>
                             </li>
                         }
                     </ul>
                 </div>
-
             </div>
         </nav>
-
     </header>
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

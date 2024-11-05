@@ -28,6 +28,8 @@ namespace Ideia.IO.Models
         public int? PorcentagemConcluida { get; set; }
         [NotMapped]
         public string Autor { get; set; }
+        [NotMapped]
+        public bool Salvo { get; set; }
 
     }
 }
