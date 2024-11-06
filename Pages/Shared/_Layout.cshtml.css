@@ -46,3 +46,19 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+
+
+.txtPesquisar {
+    background-color: #123252;
+    border-color: #123252;
+    width: 100%;
+    color: white;
+}
+
+.txtPesquisar:focus {
+    background-color: #123252;
+    border: none;
+    width: 100%;
+    color: white;
+}

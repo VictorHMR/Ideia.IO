@@ -32,21 +32,18 @@ namespace Ideia.IO.Pages.Projetos
                 ListarProjetos();
         }
 
-        public IActionResult OnGetPesquisar()
-        {
-            if (Pesquisa.MinhasContribuicoes)
-                ListarProjetosContribuidos();
-            else
-                ListarProjetos();
-
-            return Page();
-        }
-
         public void ListarProjetos()
         {
+            CarregarListaOrdenada();
+
+            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa) 
+                ? LstProjetos.Where(x => x.Ativo).Count() 
+                : LstProjetos.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Count(); 
+            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
+
             LstProjetos = string.IsNullOrEmpty(Pesquisa.Pesquisa)
-                ? _db.Projeto.Where(x=> x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
-                : _db.Projeto.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
+                ? LstProjetos?.Where(x=> x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
+                : LstProjetos?.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
 
             foreach (var projeto in LstProjetos)
             {
@@ -58,21 +55,24 @@ namespace Ideia.IO.Pages.Projetos
                 projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeCompleto ?? "";
                 projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
             }
-            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa) 
-                ? _db.Projeto.Where(x => x.Ativo).Count() 
-                : _db.Projeto.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Count(); 
-            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
         }
 
         public void ListarProjetosContribuidos()
         {
+            CarregarListaOrdenada();
             int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             List<int?> ProjetosContribuidos = _db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto != null).Select(x => x.IdProjeto).Distinct().ToList();
+            
+            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa)
+                ? LstProjetos.Where(x => ProjetosContribuidos.Contains(x.Id)).Count()
+                : LstProjetos.Where(x => ProjetosContribuidos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Count();
+
+            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
+            TotalContribuido = _db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto != null).Sum(y => y.Valor);
 
             LstProjetos = string.IsNullOrEmpty(Pesquisa.Pesquisa)
-                ? _db.Projeto.Where(x => ProjetosContribuidos.Contains(x.Id)).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
-                : _db.Projeto.Where(x => ProjetosContribuidos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
+                ? LstProjetos?.Where(x => ProjetosContribuidos.Contains(x.Id)).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
+                : LstProjetos?.Where(x => ProjetosContribuidos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
 
 
             foreach (var projeto in LstProjetos)
@@ -87,12 +87,23 @@ namespace Ideia.IO.Pages.Projetos
             }
             LstProjetos.ForEach(x => x.Contribuido = _db.Transacao.Where(y=> y.IdProjeto == x.Id && y.IdUsuario == idUsuario).Sum(z=> z.Valor));
 
-            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa)
-                ? _db.Projeto.Where(x => ProjetosContribuidos.Contains(x.Id)).Count()
-                : _db.Projeto.Where(x => ProjetosContribuidos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Count();
+        }
 
-            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
-            TotalContribuido = _db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto != null).Sum(y => y.Valor);
+        public void CarregarListaOrdenada()
+        {
+            switch (Pesquisa.Ordenacao)
+            {
+                case OrdenacaoPesquisa.MaisNovos:
+                    LstProjetos = _db.Projeto.OrderByDescending(x => x.DtCriacao).ToList();
+                    break;
+                case OrdenacaoPesquisa.MaisAntigos:
+                    LstProjetos = _db.Projeto.OrderBy(x => x.DtCriacao).ToList();
+                    break;
+                default:
+                    LstProjetos = _db.Projeto.OrderByDescending(x => x.Visitas).ToList();
+                    break;
+
+            }
         }
 
     }

@@ -1,16 +1,36 @@
 ﻿@page
+@using Ideia.IO.Models
 @model Ideia.IO.Pages.Projetos.PesquisarModel
 @{
 }
-<div class="text-center">
-    @if(Model.TotalContribuido is not null)
-    {
-        <h3>Minhas contribuições</h3>
-        <h3>Total Contribuído: @Model.TotalContribuido?.ToString("C")</h3>
-    }
-    <h3>Total de Projetos: @Model.TotalProj</h3>
-    <h3>Quantidade de Paginas: @Model.TotalPaginas</h3>
-    <h3>Página: @Model.Pesquisa.Pagina</h3>
+<div class="text-center containerPesquisa">
+    <div class="HeaderPesquisa">
+        <div class="HeaderPesquisa-Item">
+            @if (Model.Pesquisa.MinhasContribuicoes)
+            {
+                <h2>Minhas contribuições</h2>
+            }
+            else
+            {   
+                <h2>Pesquisa</h2>
+            }
+            <h3>Total de Projetos: @Model.TotalProj</h3>
+        </div>
+        <div class="HeaderPesquisa-Item">
+            @if(Model.TotalContribuido is not null)
+            {
+                <h2>Total Contribuído: @Model.TotalContribuido?.ToString("C")</h2>
+            }
+        </div>
+        <div class="HeaderPesquisa-Item d-flex align-items-end">
+            <h4 class="mb-0 mr-2">Ordenar por: &nbsp;</h4>
+            <select id="OrdenacaoFiltro" class="OrdenacaoFiltro" onchange="AlterarValorOrdenacao(event)">
+                <option value="@OrdenacaoPesquisa.Relevancia">Relevância</option>
+                <option value="@OrdenacaoPesquisa.MaisNovos">Mais recentes</option>
+                <option value="@OrdenacaoPesquisa.MaisAntigos">Mais antigos</option>
+            </select>
+        </div>
+    </div>
     <section class="projects-container">
         @foreach(var projeto in Model.LstProjetos)
         {
@@ -19,11 +39,14 @@
             <a asp-area="" asp-page="/Projetos/Projetos" asp-route-IdProjeto="@projeto.Id" style="text-decoration:none">
                 <div class="project-box">
                     <div class="project-card">
-                        @if (projeto.CapaProj is not null)
-                        {
-                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto"  />
-                        }
+                        <div class="image-wrapper">
+                            @if (projeto.CapaProj is not null)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(projeto.CapaProj)" alt="Imagem do Projeto" />
+                            }
+                        </div>
                     </div>
+
                     <div class="project-title">
                         <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; display: inline-block;">
                             <img id="profileImageNav" src="@srcPerfil" alt="Foto de Perfil" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -44,32 +67,41 @@
         }
     </section>
 
-    <form method="get" asp-page-handler="Pesquisar">
-        <input type="hidden" asp-for="Pesquisa!.Pesquisa" />
-        <input type="hidden" asp-for="Pesquisa!.MinhasContribuicoes" />
-        <input type="hidden" id="idPagina" asp-for="Pesquisa!.Pagina" value="@Model.Pesquisa.Pagina" />
         @if (Model.Pesquisa.Pagina > 1)
         {
-            <button id="btnAnterior" type="submit" class="btn btn-danger" onclick="PaginaAnterior()">Anterior</button>
+            <button id="btnAnterior" class="btn btn-danger" onclick="PaginaAnterior()">Anterior</button>
         }
         @if(Model.Pesquisa.Pagina != Model.TotalPaginas)
         {
-            <button id="btnProximo" type="submit" class="btn btn-danger" onclick="ProximaPagina()">Proxima</button>
+            <button id="btnProximo" class="btn btn-danger" onclick="ProximaPagina()">Proxima</button>
         }
-    </form>
 </div>
 <script>
+    document.getElementById('txtPesquisar').value = '@Model.Pesquisa.Pesquisa';
+    document.getElementById('idPagina').value = '@Model.Pesquisa.Pagina';
+    document.getElementById('MinhasContribuicoes').value = '@Model.Pesquisa.MinhasContribuicoes';
+    document.getElementById('Ordenacao').value = '@Model.Pesquisa.Ordenacao';
+    document.getElementById('OrdenacaoFiltro').value = '@Model.Pesquisa.Ordenacao.ToString()';
 
     function ProximaPagina() {
         let paginaAtual = parseInt(document.getElementById('idPagina').value, 10); 
-        if (paginaAtual < @Model.TotalPaginas)
+        if (paginaAtual < @Model.TotalPaginas){
             document.getElementById('idPagina').value = paginaAtual + 1;
+            document.getElementById('formPesquisa').submit();
+        }
     }
 
     function PaginaAnterior() {
         let paginaAtual = parseInt(document.getElementById('idPagina').value, 10); 
-        if(paginaAtual > 1)
+        if(paginaAtual > 1){
             document.getElementById('idPagina').value = paginaAtual - 1;
+            document.getElementById('formPesquisa').submit();
+        }
+    }
+
+    function AlterarValorOrdenacao(e) {
+        document.getElementById('Ordenacao').value = e.target.value;
+        document.getElementById('formPesquisa').submit();
     }
 </script>
 

@@ -1,0 +1,25 @@
+﻿.ContainerBusca {
+    width:70vw;
+}
+.HeaderPesquisa {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Alinha os itens na parte inferior */
+}
+
+.HeaderPesquisa-Item{
+    text-align:left;
+
+}
+.HeaderPesquisa-Item h2, h3, h4{
+    color: white;
+}
+.HeaderPesquisa-Item h2 {
+    font-size: 25px;
+}
+.HeaderPesquisa-Item h3 {
+    font-size: 12px;
+}
+.HeaderPesquisa-Item h4 {
+    font-size: 15px;
+}

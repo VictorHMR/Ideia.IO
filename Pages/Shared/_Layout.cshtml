@@ -26,9 +26,11 @@
                 <a class="navbar-brand" asp-area="" asp-page="/Index" style="width:33%;font-weight:bold;font-size:35px">Ideia.IO</a>
                 <!-- Botão de navegação responsiva -->
                 <div style="width:33%;">
-                    <form method="get" asp-page="/Projetos/Pesquisar" class="d-sm-flex flex-grow-1 justify-content-center">
-                        <input type="text" name="Pesquisa.Pesquisa" placeholder="Digite sua pesquisa" class="form-control" style="width:100%" />
-                        <button type="submit" class="btn btn-secondary ms-2">Buscar</button>
+                    <form method="get" asp-page="/Projetos/Pesquisar" class="d-sm-flex flex-grow-1 justify-content-center" id="formPesquisa">
+                        <input type="hidden" id="idPagina" name="Pesquisa.Pagina" />
+                        <input type="hidden" id="MinhasContribuicoes" name="Pesquisa.MinhasContribuicoes" />
+                        <input type="hidden" id="Ordenacao" name="Pesquisa.Ordenacao" />
+                        <input type="text" id="txtPesquisar" name="Pesquisa.Pesquisa" placeholder="Digite sua pesquisa" class="form-control txtPesquisar" onkeydown="if (event.key === 'Enter') this.form.submit();" />
                     </form>
                 </div>
                 <!-- Opções de navegação -->
