@@ -37,10 +37,10 @@ body {
     max-width: 1600px;
 }
 
-    .projects-container a {
-        text-decoration: none;
-        color: white;
-    }
+.projects-container a {
+    text-decoration: none;
+    color: white;
+}
 
 .project-box {
     height: 100%;
@@ -111,9 +111,9 @@ body {
     justify-content: space-between;
 }
 
-    .project-infos p {
-        color: #494949;
-    }
+.project-infos p {
+    color: #494949;
+}
 
 @media (max-width: 1200px) {
     .projects-container {
@@ -131,71 +131,4 @@ body {
     .projects-container {
         grid-template-columns: 1fr; /* 1 coluna para telas pequenas */
     }
-}
-
-.btn-entrar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    background: linear-gradient(to bottom, #000000, #091D31, #0D2A46, #143C65);
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
-    text-decoration: none;
-}
-
-    .btn-entrar img {
-        width: 25px;
-    }
-
-    /* Efeito ao passar o mouse */
-    .btn-entrar:hover {
-        color: white;
-        transform: scale(1.05);
-    }
-
-.btn-registrar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    background: none;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease-in-out;
-    text-decoration: none;
-    position: relative;
-}
-
-/* Borda em gradiente para o botão Registrar */
-.btn-registrar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 8px;
-    padding: 2px;
-    background: linear-gradient(to bottom, #000000, #091D31, #0D2A46, #143C65);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-}
-
-/* Efeito ao passar o mouse no botão Registrar */
-.btn-registrar:hover {
-    color: white;
-    transform: scale(1.05);
 }

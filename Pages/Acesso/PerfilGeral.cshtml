@@ -9,9 +9,9 @@
         <div class="alert alert-danger">@ViewData["Fail"]</div>
     }
     <form method="post" asp-action="../Privacy" enctype="multipart/form-data">
-        <div>
+        <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; display: inline-block;">
             <img id="profileImage" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Usuario?.ImgPerfil ?? new byte[0])"
-                 alt="Foto de Perfil" style="width: 150px; height: 150px; border-radius: 50%;" />
+                 alt="Foto de Perfil" style="width: 150px; height: 150px; object-fit: cover;" />
         </div>
         <input asp-for="Usuario!.ImgPerfilFile" type="file" accept="image/png, image/jpeg, image/gif" />
         <input asp-for="Usuario!.NomeCompleto" type="text" placeholder="Nome Completo" />

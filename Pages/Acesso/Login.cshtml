@@ -1,18 +1,50 @@
-﻿@page 
+﻿@page
 @model Ideia.IO.Pages.Acesso.LoginModel
 @{
     ViewData["Title"] = "Login";
-
 }
 
-<div class="text-center">
+<div class="text-center d-flex justify-content-center align-items-center" style="height: 70vh;">
     @if (ViewData["Fail"] != null)
     {
         <div class="alert alert-danger">@ViewData["Fail"]</div>
     }
-    <form method="post" asp-action="../Privacy">
-        <input name="Email" type="email" placeholder="Email" />
-        <input name="Senha" type="password" placeholder="Senha" />
-        <input type="submit" value="Entrar" />
+    <form method="post" asp-action="../Privacy" autocomplete="off">
+        <div class="container text-center container-acesso">
+            <h1>Ideia.Io</h1>
+            <h1>Seja bem vindo!</h1>
+            <div class="row" style="display:flex;justify-content:center">
+                <input class="form-control input-acesso" name="Email" type="email" placeholder="Email" />
+
+                <!-- Campo de senha com ícone de olho -->
+                <div class="input-acesso" style="position: relative;padding:0;">
+                    <input id="senhaInput" class="form-control" name="Senha" type="password" placeholder="Senha" />
+                    <span onclick="togglePasswordVisibility()"
+                          style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                        <i id="eyeIcon" class="fas fa-eye" style="color: white;"></i>
+                    </span>
+                </div>
+                <p style="color:#fff;margin:2px 0 8px 0;">Esqueci Minha senha</p>
+                <input class="btn-primario" style="margin:0 5px;width:50%" type="submit" value="Entrar" />
+            </div>
+        </div>
     </form>
 </div>
+
+
+<script>
+    function togglePasswordVisibility() {
+        const senhaInput = document.getElementById("senhaInput");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        if (senhaInput.type === "password") {
+            senhaInput.type = "text";
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
+        } else {
+            senhaInput.type = "password";
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
+        }
+    }
+</script>

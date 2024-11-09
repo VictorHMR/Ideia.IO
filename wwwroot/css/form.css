@@ -1,0 +1,43 @@
+﻿input[type=text], input[type=password], input[type=email] {
+    background-color: #123252;
+    border-color: #123252;
+    color: white;
+}
+
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=email]:after {
+        border: none;
+        background-color: #123252;
+        color: white;
+    }
+.input-acesso {
+    margin: 5px 5px;
+    padding-right: 30px; /* Espaço para o ícone */
+}
+
+.input-50-container {
+    margin: 5px 5px;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.container-acesso {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container-acesso h1 {
+    color: #fff;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.container-acesso h1:first-of-type {
+    background-color: #070F17;
+    width: fit-content;
+    padding: 5px 10px;
+}
+     

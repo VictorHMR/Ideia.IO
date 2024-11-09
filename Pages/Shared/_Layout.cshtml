@@ -11,7 +11,11 @@
     <title>@ViewData["Title"] - Ideia.IO</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/button.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ideia.IO.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
     <header>
@@ -41,14 +45,14 @@
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="btn-entrar" asp-area="" asp-page="/Acesso/Login">
+                                <a class="btn btn-primario" asp-area="" asp-page="/Acesso/Login">
                                     <img src="@Url.Content("~/svg/person-fill.svg")" />
                                     Entrar
                                 </a>
                             </li>
                             <li class="nav-item ms-3">
-                                <a class="btn-registrar" asp-area="" asp-page="/Acesso/Registro">
-                                    Registrar-se
+                                <a class="btn-transparent" asp-area="" asp-page="/Acesso/Registro">
+                                    Cadastrar-se
                                 </a>
                             </li>
                         }

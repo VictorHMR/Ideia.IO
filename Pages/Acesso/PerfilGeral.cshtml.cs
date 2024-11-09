@@ -1,5 +1,7 @@
 using Ideia.IO.Database;
 using Ideia.IO.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -44,6 +46,20 @@ namespace Ideia.IO.Pages.Acesso
                     }
                     UsuarioDB.Senha = Usuario.NovaSenha;
                 }
+                var user = (ClaimsIdentity)User.Identity;
+                
+                if (UsuarioDB.NomeUsuario != Usuario.NomeUsuario)
+                {
+
+                    var oldClaim = user.FindFirst(ClaimTypes.Name);
+                    if (oldClaim != null)
+                    {
+                        user.RemoveClaim(oldClaim);
+                    }
+
+                    user.AddClaim(new Claim(ClaimTypes.Name, Usuario.NomeUsuario));
+
+                }
 
                 UsuarioDB.NomeCompleto = Usuario.NomeCompleto;
                 UsuarioDB.NomeUsuario = Usuario.NomeUsuario;
@@ -58,6 +74,11 @@ namespace Ideia.IO.Pages.Acesso
                 }
 
                 _db.SaveChanges();
+
+                await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(user));
+
             }
             return Redirect("/Acesso/PerfilGeral");
         }
