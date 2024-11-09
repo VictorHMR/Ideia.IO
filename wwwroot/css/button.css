@@ -1,5 +1,5 @@
 ﻿
-.btn-primario {
+.btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,23 +8,24 @@
     font-weight: bold;
     border: none;
     border-radius: 8px;
-    color: #000;
     cursor: pointer;
-    background: #FFDD00;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out;
     text-decoration: none;
 }
 
-    .btn-primario img {
+    .btn img {
         width: 25px;
     }
 
     /* Efeito ao passar o mouse */
-    .btn-primario:hover {
+    .btn:hover {
         transform: scale(1.05);
     }
-
+.btn-primario {
+    background: #FFDD00;
+    color: #000;
+}
 .btn-transparent {
     display: flex;
     align-items: center;
@@ -61,4 +62,22 @@
         color: white;
         transform: scale(1.05);
     }
+.btn-verde {
+    background-color: #09310A;
+    color: #FFF;
+    padding: 10px 50px;
+    margin-top: 10px;
+}
+.btn-verde:hover{
+    color: #FFF;
+}
 
+.btn-azul {
+    background-color: #123252;
+    color: #FFF;
+    padding: 10px 50px;
+    margin-top: 10px;
+}
+.btn-azul:hover {
+    color: #FFF;
+}

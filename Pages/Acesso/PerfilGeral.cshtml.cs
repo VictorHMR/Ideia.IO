@@ -36,13 +36,13 @@ namespace Ideia.IO.Pages.Acesso
                 {
                     if(UsuarioDB.Senha != Usuario.Senha)
                     {
-                        ViewData["Fail"] = "Senha incorreta";
-                        return Page();
+                        TempData["Fail"] = "Senha incorreta";
+                        return Redirect("/Acesso/PerfilGeral");
                     }
                     if (Usuario.NovaSenha != Usuario.ConfirmarSenha)
                     {
-                        ViewData["Fail"] = "As senhas não coincidem";
-                        return Page();
+                        TempData["Fail"] = "As senhas não coincidem";
+                        return Redirect("/Acesso/PerfilGeral");
                     }
                     UsuarioDB.Senha = Usuario.NovaSenha;
                 }
@@ -64,6 +64,7 @@ namespace Ideia.IO.Pages.Acesso
                 UsuarioDB.NomeCompleto = Usuario.NomeCompleto;
                 UsuarioDB.NomeUsuario = Usuario.NomeUsuario;
                 UsuarioDB.Telefone = Usuario.Telefone;
+                UsuarioDB.ChavePix = Usuario.ChavePix;
                 if (Usuario.ImgPerfilFile != null && Usuario.ImgPerfilFile.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())
@@ -80,6 +81,7 @@ namespace Ideia.IO.Pages.Acesso
                         new ClaimsPrincipal(user));
 
             }
+            TempData["Success"] = "Alteração realizada com sucesso";
             return Redirect("/Acesso/PerfilGeral");
         }
 

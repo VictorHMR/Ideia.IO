@@ -1,4 +1,8 @@
-﻿input[type=text], input[type=password], input[type=email] {
+﻿label {
+    color: #fff;
+    text-align: left;
+}
+input[type=text], input[type=password], input[type=email] {
     background-color: #123252;
     border-color: #123252;
     color: white;
@@ -11,7 +15,7 @@
     }
 .input-acesso {
     margin: 5px 5px;
-    padding-right: 30px; /* Espaço para o ícone */
+    padding-right: 30px; 
 }
 
 .input-50-container {
@@ -19,6 +23,18 @@
     padding: 0;
     display: flex;
     justify-content: space-between;
+    gap: 10px;
+}
+.form-floating {
+    margin: 5px 5px;
+    width: 100%;
+}
+
+.input-button-container {
+    margin: 5px 5px;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
     gap: 10px;
 }
 

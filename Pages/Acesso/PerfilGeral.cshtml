@@ -3,26 +3,74 @@
 @{
 }
 
-<div class="text-center">
-    @if (ViewData["Fail"] != null)
-    {
-        <div class="alert alert-danger">@ViewData["Fail"]</div>
-    }
-    <form method="post" asp-action="../Privacy" enctype="multipart/form-data">
-        <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; display: inline-block;">
-            <img id="profileImage" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Usuario?.ImgPerfil ?? new byte[0])"
-                 alt="Foto de Perfil" style="width: 150px; height: 150px; object-fit: cover;" />
+<div class="text-center d-flex justify-content-center align-items-center" style="height: 70vh;">
+    <form class="row" style="width:100%" method="post" asp-action="../Privacy" enctype="multipart/form-data">
+        @if (TempData["Fail"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Fail"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        <div class="col-md-3">
+            <div class="container-perfil-image" style="position: relative;" onclick="document.getElementById('fileInput').click();">
+                <img id="profileImage" src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Usuario?.ImgPerfil ?? new byte[0])" alt="Foto de Perfil" />
+                <div class="overlay">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <input id="fileInput" class="form-control file-input" asp-for="Usuario!.ImgPerfilFile" type="file" accept="image/png, image/jpeg, image/gif" />
+            </div>
+
         </div>
-        <input asp-for="Usuario!.ImgPerfilFile" type="file" accept="image/png, image/jpeg, image/gif" />
-        <input asp-for="Usuario!.NomeCompleto" type="text" placeholder="Nome Completo" />
-        <input asp-for="Usuario!.NomeUsuario" type="text" placeholder="Nome de usuário" />
-        <input asp-for="Usuario!.Email" type="email" placeholder="Email" />
-        <input asp-for="Usuario!.Telefone" id="inpTelefone" type="text" placeholder="Telefone" />
-        <input asp-for="Usuario!.Senha" type="password" placeholder="Senha" />
-        <input asp-for="Usuario!.NovaSenha" type="password" placeholder="Nova Senha" />
-        <input asp-for="Usuario!.ConfirmarSenha" type="password" placeholder="Confirmar Senha" />
-        
-        <input type="submit" value="Salvar" />
+
+            <div class="col-md-9">
+                <div class="container text-center container-acesso" style="width:100%">
+                    <div class="form-floating input-50-container">
+                        <input class="form-control input-acesso" id="frmNomeCompleto" asp-for="Usuario!.NomeCompleto" type="text" placeholder="Nome Completo" />
+                        <label for="frmNomeCompleto">Nome Completo</label>
+                    </div>
+                    <div class="input-50-container">
+                        <div class="form-floating">
+                            <input class="form-control" id="frmNomeUsuario" asp-for="Usuario!.NomeUsuario" type="text" placeholder="Nome de usuário" />
+                            <label for="frmNomeUsuario">Usuário</label>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" id="frmSenha" asp-for="Usuario!.Senha" type="password" placeholder="Senha" />
+                            <label for="frmSenha">Senha</label>
+                        </div>
+                    </div>
+                    <div class="input-50-container">
+                        <div class="form-floating">
+                            <input class="form-control" id="frmEmail" asp-for="Usuario!.Email" type="email" placeholder="Email" />
+                            <label for="frmEmail">Email</label>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" id="frmNovaSenha" asp-for="Usuario!.NovaSenha" type="password" placeholder="Nova Senha" />
+                            <label for="frmNovaSenha">Nova Senha</label>
+                        </div>
+                    </div>
+                    <div class="input-50-container">
+                        <div class="form-floating">
+                            <input class="form-control" id="inpTelefone" asp-for="Usuario!.Telefone" type="text" placeholder="Telefone" />
+                            <label for="inpTelefone">Telefone</label>
+                        </div>
+                        <div class="form-floating">
+                            <input class="form-control" id="frmConfirmarSenha" asp-for="Usuario!.ConfirmarSenha" type="password" placeholder="Confirmar Senha" />
+                            <label for="frmConfirmarSenha">Confirmar Senha</label>
+                        </div>
+                    </div>
+                    <div class="form-floating input-50-container">
+                        <input class="form-control input-acesso" id="frmChavePix" asp-for="Usuario!.ChavePix" type="text" placeholder="Chave Pix" />
+                        <label for="frmChavePix">Chave Pix</label>
+                    </div>
+
+                    <div class="input-button-container">
+                        <a class="btn btn-azul">Voltar</a>
+                        <input class="btn btn-verde" type="submit" value="Salvar" />
+                    </div>
+                </div>
+            </div>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -31,7 +79,7 @@
     <script>
         $('#inpTelefone').mask('(00) 00000-0000');
 
-        document.getElementById("Usuario_ImgPerfilFile").addEventListener("change", function (event) {
+        document.getElementById("fileInput").addEventListener("change", function (event) {
             const input = event.target;
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
