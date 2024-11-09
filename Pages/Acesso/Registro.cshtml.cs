@@ -22,18 +22,26 @@ namespace Ideia.IO.Pages.Acesso
 
         public async Task<IActionResult> OnPostAsync([FromForm] Usuario? Usuario)
         {
-            Usuario? UsuarioDB = await _db.Usuario.FirstOrDefaultAsync(x => x.Email == Usuario.Email);
-            if(UsuarioDB is null)
+            if(Usuario?.Senha != Usuario?.ConfirmarSenha)
             {
-                _db.Usuario.Add(Usuario);
-                _db.SaveChanges();
+                ViewData["Fail"] = "As senhas não coincidem!";
+                return Page();
             }
             else
             {
-                ViewData["Fail"] = "Email já cadastrado em outra conta!" ;
-                return Page();
+                Usuario? UsuarioDB = await _db.Usuario.FirstOrDefaultAsync(x => x.Email == Usuario.Email);
+                if(UsuarioDB is null)
+                {
+                    _db.Usuario.Add(Usuario);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    ViewData["Fail"] = "Email já cadastrado em outra conta!" ;
+                    return Page();
+                }
+                return Redirect("/Acesso/Login");
             }
-            return Redirect("/Acesso/Login");
         }
     }
 }

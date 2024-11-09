@@ -9,9 +9,11 @@
         <div class="alert alert-danger">@ViewData["Fail"]</div>
     }
     <form method="post" asp-action="/Login">
-        <input name="NomeCompleto" type="text" placeholder="Nome Completo" />
-        <input name="Email" type="email" placeholder="Email" />
-        <input name="Senha" type="password" placeholder="Senha" />
+        <input name="NomeUsuario" type="text" placeholder="Nome de Usuario" required />
+        <input name="NomeCompleto" type="text" placeholder="Nome Completo" required />
+        <input name="Email" type="email" placeholder="Email" required />
+        <input name="Senha" type="password" placeholder="Senha" required />
+        <input name="ConfirmarSenha" type="password" placeholder="Confirme sua senha" required />
         <input type="submit" value="Cadastrar-se" />
     </form>
 </div>

@@ -39,9 +39,20 @@ namespace Ideia.IO.Database
                 .IsRequired();
 
             modelBuilder.Entity<Usuario>()
+                .Property(x => x.NomeUsuario)
+                .IsRequired();
+
+            modelBuilder.Entity<Usuario>()
                .Property(x => x.Email)
                .HasMaxLength(50)
                .IsRequired();
+
+            modelBuilder.Entity<Usuario>()
+               .Property(x => x.Telefone)
+                .HasMaxLength(20);
+
+            modelBuilder.Entity<Usuario>()
+               .Property(x => x.ChavePix);
 
             modelBuilder.Entity<Usuario>()
                .Property(x => x.Senha)

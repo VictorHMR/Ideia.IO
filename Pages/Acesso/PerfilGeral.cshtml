@@ -15,13 +15,22 @@
         </div>
         <input asp-for="Usuario!.ImgPerfilFile" type="file" accept="image/png, image/jpeg, image/gif" />
         <input asp-for="Usuario!.NomeCompleto" type="text" placeholder="Nome Completo" />
+        <input asp-for="Usuario!.NomeUsuario" type="text" placeholder="Nome de usuário" />
         <input asp-for="Usuario!.Email" type="email" placeholder="Email" />
-        <input asp-for="Usuario!.Senha" type="password" value="@Model.Usuario!.Senha" placeholder="Senha" />
+        <input asp-for="Usuario!.Telefone" id="inpTelefone" type="text" placeholder="Telefone" />
+        <input asp-for="Usuario!.Senha" type="password" placeholder="Senha" />
+        <input asp-for="Usuario!.NovaSenha" type="password" placeholder="Nova Senha" />
+        <input asp-for="Usuario!.ConfirmarSenha" type="password" placeholder="Confirmar Senha" />
         
         <input type="submit" value="Salvar" />
     </form>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
     <script>
+        $('#inpTelefone').mask('(00) 00000-0000');
+
         document.getElementById("Usuario_ImgPerfilFile").addEventListener("change", function (event) {
             const input = event.target;
             if (input.files && input.files[0]) {

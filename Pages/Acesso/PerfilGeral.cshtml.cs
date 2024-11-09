@@ -30,8 +30,24 @@ namespace Ideia.IO.Pages.Acesso
             Usuario UsuarioDB = _db.Usuario.Find(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             if(UsuarioDB is not null)
             {
+                if(Usuario.Senha is not null)
+                {
+                    if(UsuarioDB.Senha != Usuario.Senha)
+                    {
+                        ViewData["Fail"] = "Senha incorreta";
+                        return Page();
+                    }
+                    if (Usuario.NovaSenha != Usuario.ConfirmarSenha)
+                    {
+                        ViewData["Fail"] = "As senhas não coincidem";
+                        return Page();
+                    }
+                    UsuarioDB.Senha = Usuario.NovaSenha;
+                }
+
                 UsuarioDB.NomeCompleto = Usuario.NomeCompleto;
-                UsuarioDB.Senha = Usuario.Senha;
+                UsuarioDB.NomeUsuario = Usuario.NomeUsuario;
+                UsuarioDB.Telefone = Usuario.Telefone;
                 if (Usuario.ImgPerfilFile != null && Usuario.ImgPerfilFile.Length > 0)
                 {
                     using (var memoryStream = new MemoryStream())

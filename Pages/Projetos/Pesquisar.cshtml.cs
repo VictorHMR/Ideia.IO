@@ -60,6 +60,7 @@ namespace Ideia.IO.Pages.Projetos
         public void ListarProjetosContribuidos()
         {
             CarregarListaOrdenada();
+
             int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             List<int?> ProjetosContribuidos = _db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto != null).Select(x => x.IdProjeto).Distinct().ToList();
             
@@ -89,7 +90,7 @@ namespace Ideia.IO.Pages.Projetos
 
         }
 
-        public void CarregarListaOrdenada()
+        internal void CarregarListaOrdenada()
         {
             switch (Pesquisa.Ordenacao)
             {

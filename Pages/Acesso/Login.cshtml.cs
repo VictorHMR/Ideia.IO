@@ -37,7 +37,7 @@ namespace Ideia.IO.Pages.Acesso
             List<Claim> claims =
             [
                 new Claim(ClaimTypes.NameIdentifier, UsuarioDB.Id.ToString()),
-                 new Claim(ClaimTypes.Name, UsuarioDB.NomeCompleto)
+                 new Claim(ClaimTypes.Name, UsuarioDB.NomeUsuario)
             ];
             var authScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
