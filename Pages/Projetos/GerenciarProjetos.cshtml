@@ -18,6 +18,8 @@
         <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" required disabled="@readOnly" />
         <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" required disabled="@readOnly" />
         <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
+        <input asp-for="Projeto!.DtLimite" name="DtLimite" type="date" placeholder="DataLimite" required disabled="@readOnly" />
+
         @if (!readOnly)
         {
             @if (Action == "Create")

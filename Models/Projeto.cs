@@ -14,6 +14,8 @@ namespace Ideia.IO.Models
         public double? Meta{ get; set; }
         [Required]
         public DateTime? DtCriacao{ get; set; }
+        [Required]
+        public DateTime? DtLimite { get; set; }
         public int IdUsuAutor { get; set; }
         public bool Ativo { get; set; } = true;
         public int Visitas { get; set; } = 0;

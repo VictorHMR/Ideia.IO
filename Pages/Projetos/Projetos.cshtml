@@ -10,6 +10,7 @@
 <h1>Titulo: @Model.Projeto.Titulo</h1>
 <p>@Model.Projeto.Descricao</p>
 <h3>Criado em: @Model.Projeto.DtCriacao?.ToString("dd/MM/yyyy")</h3>
+<h3>Termina em: @Model.Projeto.DtLimite?.ToString("dd/MM/yyyy")</h3>
 <h3>Meta: @Model.Projeto.Meta?.ToString("C")</h3>
 <h3>Obtido: @Model.Transacoes.Sum(x => x.Valor).ToString("C")</h3>
 @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)

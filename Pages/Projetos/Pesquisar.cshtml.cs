@@ -45,16 +45,7 @@ namespace Ideia.IO.Pages.Projetos
                 ? LstProjetos?.Where(x=> x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
                 : LstProjetos?.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
 
-            foreach (var projeto in LstProjetos)
-            {
-                double Arrecadado = _db.Transacao.Where(x => x.IdProjeto == projeto.Id).Sum(x => x.Valor);
-
-                projeto.ImgAutor = _db.Usuario.Find(projeto.IdUsuAutor)?.ImgPerfil;
-                projeto.CapaProj = _db.ImagemProjeto.FirstOrDefault(y => y.IdProjeto == projeto.Id && y.NrOrdem == 1)?.Imagem;
-                projeto.Descricao = projeto.Descricao.Length > 80 ? projeto.Descricao.Substring(0, 80) + "..." : projeto.Descricao;
-                projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeCompleto ?? "";
-                projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
-            }
+            CarregarDadosAdicionais();
         }
 
         public void ListarProjetosContribuidos()
@@ -75,17 +66,9 @@ namespace Ideia.IO.Pages.Projetos
                 ? LstProjetos?.Where(x => ProjetosContribuidos.Contains(x.Id)).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
                 : LstProjetos?.Where(x => ProjetosContribuidos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
 
+            CarregarDadosAdicionais();
 
-            foreach (var projeto in LstProjetos)
-            {
-                double Arrecadado = _db.Transacao.Where(x => x.IdProjeto == projeto.Id).Sum(x => x.Valor);
 
-                projeto.ImgAutor = _db.Usuario.Find(projeto.IdUsuAutor)?.ImgPerfil;
-                projeto.CapaProj = _db.ImagemProjeto.FirstOrDefault(y => y.IdProjeto == projeto.Id && y.NrOrdem == 1)?.Imagem;
-                projeto.Descricao = projeto.Descricao.Length > 100 ? projeto.Descricao.Substring(0, 100) + "..." : projeto.Descricao;
-                projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeCompleto ?? "";
-                projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
-            }
             LstProjetos.ForEach(x => x.Contribuido = _db.Transacao.Where(y=> y.IdProjeto == x.Id && y.IdUsuario == idUsuario).Sum(z=> z.Valor));
 
         }
@@ -104,6 +87,20 @@ namespace Ideia.IO.Pages.Projetos
                     LstProjetos = _db.Projeto.OrderByDescending(x => x.Visitas).ToList();
                     break;
 
+            }
+        }
+
+        internal void CarregarDadosAdicionais()
+        {
+            foreach (var projeto in LstProjetos)
+            {
+                double Arrecadado = _db.Transacao.Where(x => x.IdProjeto == projeto.Id).Sum(x => x.Valor);
+
+                projeto.ImgAutor = _db.Usuario.Find(projeto.IdUsuAutor)?.ImgPerfil;
+                projeto.CapaProj = _db.ImagemProjeto.FirstOrDefault(y => y.IdProjeto == projeto.Id && y.NrOrdem == 1)?.Imagem;
+                projeto.Descricao = projeto.Descricao.Length > 100 ? projeto.Descricao.Substring(0, 100) + "..." : projeto.Descricao;
+                projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeUsuario ?? "";
+                projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
             }
         }
 

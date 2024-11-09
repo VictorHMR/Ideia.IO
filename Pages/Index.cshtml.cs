@@ -30,7 +30,7 @@ namespace Ideia.IO.Pages
                 projeto.ImgAutor = _db.Usuario.Find(projeto.IdUsuAutor)?.ImgPerfil;
                 projeto.CapaProj = _db.ImagemProjeto.FirstOrDefault(y => y.IdProjeto == projeto.Id && y.NrOrdem == 1)?.Imagem;
                 projeto.Descricao= projeto.Descricao.Length > 80 ? projeto.Descricao.Substring(0, 80) + "..." : projeto.Descricao;
-                projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeCompleto ?? "";
+                projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeUsuario ?? "";
                 projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
             }
             TotalProj = _db.Projeto.Count();

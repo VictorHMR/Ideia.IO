@@ -94,6 +94,10 @@ namespace Ideia.IO.Database
                 .IsRequired();
 
             modelBuilder.Entity<Projeto>()
+                .Property(x => x.DtLimite)
+                .IsRequired();
+
+            modelBuilder.Entity<Projeto>()
                 .Property(x => x.IdUsuAutor)
                 .IsRequired();
 

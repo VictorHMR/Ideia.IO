@@ -89,6 +89,7 @@ namespace Ideia.IO.Pages.Projetos
                     ProjetoDB.Titulo = projeto.Titulo;
                     ProjetoDB.Descricao = projeto.Descricao;
                     ProjetoDB.Meta = projeto.Meta;
+                    ProjetoDB.DtLimite = projeto.DtLimite;
                     _db.SaveChanges();
                 }
             }

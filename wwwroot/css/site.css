@@ -103,7 +103,6 @@ body {
 }
 .project-infos{
     display: flex;
-    margin-left: 50px;
     justify-content: space-between;
 }
 
