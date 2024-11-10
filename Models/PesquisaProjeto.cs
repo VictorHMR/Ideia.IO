@@ -8,7 +8,7 @@ namespace Ideia.IO.Models
         public int Pagina { get; set; } = 1;
         public int ItemsPorPagina { get; set; } = 20;
         public bool Salvos { get; set; } = false;
-        public bool MinhasContribuicoes { get; set; } = false;
+        public LocalPesquisa Local { get; set; } = LocalPesquisa.Pesquisa;
         public OrdenacaoPesquisa Ordenacao { get; set; } = OrdenacaoPesquisa.Relevancia;
     }
 
@@ -20,5 +20,13 @@ namespace Ideia.IO.Models
         MaisAntigos,
         [Display(Name = "Mais Novos")]
         MaisNovos
+    }
+
+    public enum LocalPesquisa
+    {
+        Pesquisa,
+        MinhasContribuicoes,
+        Salvos,
+        MeusProjetos
     }
 }

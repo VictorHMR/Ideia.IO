@@ -6,7 +6,7 @@
 <div class="text-center containerPesquisa">
     <div class="HeaderPesquisa">
         <div class="HeaderPesquisa-Item">
-            @if (Model.Pesquisa.MinhasContribuicoes)
+            @if (Model.Pesquisa.Local == LocalPesquisa.MinhasContribuicoes)
             {
                 <h2>Minhas contribuições</h2>
             }
@@ -79,7 +79,7 @@
 <script>
     document.getElementById('txtPesquisar').value = '@Model.Pesquisa.Pesquisa';
     document.getElementById('idPagina').value = '@Model.Pesquisa.Pagina';
-    document.getElementById('MinhasContribuicoes').value = '@Model.Pesquisa.MinhasContribuicoes';
+    document.getElementById('Local').value = '@Model.Pesquisa.Local';
     document.getElementById('Ordenacao').value = '@Model.Pesquisa.Ordenacao';
     document.getElementById('OrdenacaoFiltro').value = '@Model.Pesquisa.Ordenacao.ToString()';
 

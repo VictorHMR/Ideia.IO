@@ -112,7 +112,9 @@ body {
 .project-infos p {
     color: #494949;
 }
-
+.main-view-projeto {
+    margin-top: 50px;
+}
 @media (max-width: 1200px) {
     .projects-container {
         grid-template-columns: repeat(3, 1fr); /* 3 colunas para telas menores */

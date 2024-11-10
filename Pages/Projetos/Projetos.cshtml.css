@@ -1,0 +1,42 @@
+﻿p, h1, h2, h3 {
+    color: #fff;
+    text-align: justify;
+    padding: 0;
+    margin: 0;
+}
+
+p {
+    color: #555555;
+}
+
+.text-yellow-bold {
+    margin: 0 10px 0 0;
+    color: #FFDD00;
+    font-weight: bold;
+}
+
+.title{
+    font-size: 32px;
+}
+.p-white-subtitle {
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-size: 25px
+}
+
+h1{
+    font-size: 48px;
+}
+
+.p-white-sub-subtitle {
+    color: white;
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.text-yellow {
+    margin: 0 0 0 7px;
+    color: #FFDD00;
+}

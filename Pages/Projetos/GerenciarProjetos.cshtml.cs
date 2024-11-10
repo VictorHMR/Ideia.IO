@@ -92,8 +92,9 @@ namespace Ideia.IO.Pages.Projetos
                     ProjetoDB.DtLimite = projeto.DtLimite;
                     _db.SaveChanges();
                 }
+                return Redirect("/Projetos/" + ProjetoDB.Id);
             }
-            return Redirect("/Projetos/MeusProjetos");
+            return Page();
         }
 
         public IActionResult OnPostDeleteImage(int IdImagem)

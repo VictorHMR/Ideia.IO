@@ -70,5 +70,21 @@ namespace Ideia.IO.Pages.Projetos
 
             return RedirectToPage();
         }
+
+        public IActionResult OnPostDelete(int IdProjeto)
+        {
+            Projeto Projeto = _db.Projeto.Find(IdProjeto);
+            if (Projeto is not null)
+            {
+                Projeto.Ativo = false;
+                _db.SaveChanges();
+            }
+            else
+            {
+                TempData["Fail"] = "Projeto não existe";
+            }
+
+            return RedirectToPage("/Index");
+        }
     }
 }

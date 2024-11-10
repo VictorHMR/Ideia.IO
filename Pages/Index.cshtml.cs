@@ -33,7 +33,7 @@ namespace Ideia.IO.Pages
                 projeto.Autor = _db.Usuario.Find(projeto.IdUsuAutor)?.NomeUsuario ?? "";
                 projeto.PorcentagemConcluida = (int)Math.Round((Arrecadado / projeto.Meta ?? 0) * 100);
             }
-            TotalProj = _db.Projeto.Count();
+            TotalProj = _db.Projeto.Where(x => x.Ativo).Count();
             ProjConcluidos = _db.Projeto.Where(x=> x.Meta <= _db.Transacao.Where(y=> y.IdProjeto == x.Id).Sum(z=> z.Valor)).Count();
             TotalArrec = _db.Transacao.Where(x=> x.IdProjeto != null).Sum(x=>x.Valor);
         }

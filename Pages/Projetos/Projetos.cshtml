@@ -1,36 +1,85 @@
 ﻿@page "/Projetos/{IdProjeto:int}"
+@using System.Security.Claims
 @model Ideia.IO.Pages.Projetos.ProjetosModel
 @{
-}
-@if (TempData["Fail"] != null)
-{
-    <div class="alert alert-danger">@TempData["Fail"]</div>
+    bool ReadOnly = Model.Projeto.IdUsuAutor != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    bool PodeContribuir = @Model.Projeto.DtLimite > DateTime.Now;
+    int qntContribuidores = Model.Transacoes.Select(x => x.IdUsuario).Distinct().Count();
+    string Meta = Model.Projeto.Meta?.ToString("C") ?? "";
+    string Arrecadado = Model.Transacoes.Sum(x => x.Valor).ToString("C");
 }
 
-<h1>Titulo: @Model.Projeto.Titulo</h1>
-<p>@Model.Projeto.Descricao</p>
-<h3>Criado em: @Model.Projeto.DtCriacao?.ToString("dd/MM/yyyy")</h3>
-<h3>Termina em: @Model.Projeto.DtLimite?.ToString("dd/MM/yyyy")</h3>
-<h3>Meta: @Model.Projeto.Meta?.ToString("C")</h3>
-<h3>Obtido: @Model.Transacoes.Sum(x => x.Valor).ToString("C")</h3>
-@if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
-{
-    <div style="display:flex;justify-content:center">
-        @foreach (var imagem in Model.ImagemProjeto)
+<div class="text-center main-view-projeto">
+    @if (TempData["Fail"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Fail"]</div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+        @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
         {
-            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+
+            <div id="previewImagens">
+                <div id="Images" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImagemProjeto[0].Imagem ?? new byte[0])" alt="Imagem do Projeto" />
+                </div>
+            </div>
+            <div id="previewImageGallery">
+
+                @for (int i = 1; i < Model.ImagemProjeto.Count(); i++)
+                {
+                    var imagem = Model.ImagemProjeto[i];
+                    <div id="Images" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" />
+                    </div>
+                }
+
             </div>
         }
-    </div>
-}
-else
-{
-    <p>Nenhuma imagem disponível para este projeto.</p>
-}
+        else
+        {
+            <p>Nenhuma imagem disponível para este projeto.</p>
+        }
 
-<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
-<div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
+    </div>
+        <div class="col-md-6" style="display: flex;flex-direction:column;justify-content:space-between;padding-left:100px">
+            <div class="row">
+                <h1>@Model.Projeto.Titulo</h1>
+                <p class="p-white-subtitle"><span class="text-yellow-bold title">@Arrecadado</span> Arrecadado</p>
+                <p class="p-white-sub-subtitle"> De uma meta de <span class="text-yellow">@Meta</span> </p>
+                <p class="p-white-subtitle"><span class="text-yellow-bold title">@qntContribuidores</span> @(qntContribuidores ==  1 ? "Contribuidor" : "Contribuidores")</p>
+                <p class="p-white-subtitle">Criado em: @Model.Projeto.DtCriacao?.ToString("dd/MM/yyyy")</p>
+                <p class="p-white-subtitle">Termina em: @Model.Projeto.DtLimite?.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div class="row" style="margin-bottom:155px;display:flex;gap: 10px;">
+                @if (PodeContribuir)
+                {
+                    <button class="btn btn-success btn-sm col-md-3" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
+                }
+                @if (!ReadOnly)
+                {
+                    <a class="btn btn-primario col-md-3"  asp-page="/Projetos/GerenciarProjetos" asp-route-IdProjeto="@Model.Projeto.Id" asp-route-Action="Edit">Editar</a>
+                    <button class="btn btn-danger col-md-3" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        Excluir
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h1>Descrição:</h1>
+        <p style="margin:20px 0;">@Model.Projeto.Descricao</p>
+    </div>
+
+
+
+</div>
+@* Area reservada para Modals *@
+
+@if (PodeContribuir)
+{
+    <div class="modal fade" id="contribuirModal" tabindex="-1" aria-labelledby="contribuirModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -51,6 +100,31 @@ else
         </div>
     </div>
 </div>
+}
+
+@if (!ReadOnly)
+{
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Deleção</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Você tem certeza que deseja excluir <span id="projectName">@Model.Projeto.Titulo</span>? Esta ação não pode ser desfeita.
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="post" asp-page-handler="Delete">
+                        <input type="hidden" name="IdProjeto" id="projectId" value="@Model.Projeto.Id" />
+                        <button type="submit" class="btn btn-danger">Excluir</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <script>
     const contribuirModal = document.getElementById('contribuirModal');

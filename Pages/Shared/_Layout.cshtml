@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/button.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/form.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ImageGallery.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Ideia.IO.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -32,7 +33,7 @@
                 <div style="width:33%;">
                     <form method="get" asp-page="/Projetos/Pesquisar" class="d-sm-flex flex-grow-1 justify-content-center" id="formPesquisa">
                         <input type="hidden" id="idPagina" name="Pesquisa.Pagina" />
-                        <input type="hidden" id="MinhasContribuicoes" name="Pesquisa.MinhasContribuicoes" />
+                        <input type="hidden" id="Local" name="Pesquisa.Local" />
                         <input type="hidden" id="Ordenacao" name="Pesquisa.Ordenacao" />
                         <input type="text" id="txtPesquisar" name="Pesquisa.Pesquisa" placeholder="Digite sua pesquisa" class="form-control txtPesquisar" onkeydown="if (event.key === 'Enter') this.form.submit();" />
                     </form>
@@ -78,8 +79,8 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
                                     <li><a asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null" class="dropdown-item">Criar Projeto</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/MeusProjetos">Meus Projetos</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-MinhasContribuicoes="@true">Minhas contribuições</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MeusProjetos">Meus Projetos</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MinhasContribuicoes">Minhas contribuições</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/Logout">Sair</a></li>
                                 </ul>
                             </li>

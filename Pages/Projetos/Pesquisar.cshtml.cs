@@ -26,15 +26,25 @@ namespace Ideia.IO.Pages.Projetos
 
         public void OnGet()
         {
-            if (Pesquisa.MinhasContribuicoes)
-                ListarProjetosContribuidos();
-            else
-                ListarProjetos();
+            CarregarListaOrdenada();
+
+            switch (Pesquisa.Local)
+            {
+                case LocalPesquisa.Pesquisa:
+                    ListarProjetos();
+                    break;
+                case LocalPesquisa.MinhasContribuicoes:
+                    ListarProjetosContribuidos();
+                    break;
+                case LocalPesquisa.MeusProjetos:
+                    ListarMeusProjetos();
+                    break;
+
+            }
         }
 
         public void ListarProjetos()
         {
-            CarregarListaOrdenada();
 
             TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa) 
                 ? LstProjetos.Where(x => x.Ativo).Count() 
@@ -50,8 +60,6 @@ namespace Ideia.IO.Pages.Projetos
 
         public void ListarProjetosContribuidos()
         {
-            CarregarListaOrdenada();
-
             int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             List<int?> ProjetosContribuidos = _db.Transacao.Where(x => x.IdUsuario == idUsuario && x.IdProjeto != null).Select(x => x.IdProjeto).Distinct().ToList();
             
@@ -72,6 +80,23 @@ namespace Ideia.IO.Pages.Projetos
             LstProjetos.ForEach(x => x.Contribuido = _db.Transacao.Where(y=> y.IdProjeto == x.Id && y.IdUsuario == idUsuario).Sum(z=> z.Valor));
 
         }
+
+        public void ListarMeusProjetos()
+        {
+            int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa)
+                ? LstProjetos.Where(x => x.Ativo && x.IdUsuAutor == idUsuario).Count()
+                : LstProjetos.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo).Count();
+            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
+
+            LstProjetos = string.IsNullOrEmpty(Pesquisa.Pesquisa)
+                ? LstProjetos?.Where(x => x.Ativo && x.IdUsuAutor == idUsuario).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
+                : LstProjetos?.Where(x => (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa)) && x.Ativo && x.IdUsuAutor == idUsuario).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
+
+            CarregarDadosAdicionais();
+        }
+
 
         internal void CarregarListaOrdenada()
         {
