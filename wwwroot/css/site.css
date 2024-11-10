@@ -17,6 +17,9 @@ body {
     margin-bottom: 60px;
     background-color: #0F1D2B;
 }
+.container{
+    position:relative;
+}
 .navbar-nav .nav-link {
     display: flex;
     align-items: center;
@@ -127,3 +130,6 @@ body {
         grid-template-columns: 1fr; /* 1 coluna para telas pequenas */
     }
 }
+
+
+

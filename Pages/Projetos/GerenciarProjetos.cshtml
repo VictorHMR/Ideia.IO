@@ -4,7 +4,95 @@
     bool readOnly = Convert.ToBoolean(ViewData["IsReadOnly"]);
     string Action = ViewData["Action"]?.ToString() ?? "Create";
 }
-<div class="text-center">
+<style>
+    #previewImagens {
+        width: 100%;
+    }
+
+    #previewImageGallery{
+        display:grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap:10px;
+        width: 100%;
+    }
+
+
+    #previewImagens .imageContainer{
+        width:100%;
+        height: 400px;
+        display: block;
+        margin:0;
+        margin-bottom: 10px;
+    }
+
+    .imageContainer {
+        width: 135px;
+        height: 115px;
+        display: flex;
+        border-radius: 8px;
+        flex-direction: column;
+        margin: 10px;
+        position: relative;
+        overflow:hidden;
+    }
+
+    #previewImagens .imageContainer img {
+        width: 100%;
+        min-height: 400px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .imageContainer img {
+        width: 100%;
+        height: 115px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .imageContainer .img-lixeira{
+        position: absolute;
+        right: 0;
+        top:0;
+    }
+
+    .previewPlaceholder{
+        width:100%;
+        min-height: 400px;
+        background-color: #0B1824;
+        cursor: pointer;
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .previewPlaceholder2{
+        width: 100%;
+        height: 115px;
+        background-color: #0B1824;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+
+    previewPlaceholder:hover{
+        transform: scale(1.1);
+    }
+    .previewPlaceholder img{
+        width: 30px;
+        height:30px;
+    }
+</style>
+
+<div class="text-center row">
     <div id="MensagemContainer">
 
     @if (TempData["Fail"] != null)
@@ -13,81 +101,128 @@
     }
     </div>
 
-    <!-- Formulário para edição ou criação de projeto -->
-    <form method="post" enctype="multipart/form-data" onsubmit="return validarEnvio();">
-        <input asp-for="Projeto!.Titulo" name="Titulo" type="text" placeholder="Titulo do Projeto" required disabled="@readOnly" />
-        <input asp-for="Projeto!.Descricao" name="Descricao" type="text" placeholder="Descrição do Projeto" required disabled="@readOnly" />
-        <input asp-for="Projeto!.Meta" name="Meta" type="number" placeholder="Meta de Arrecadação" required disabled="@readOnly" />
-        <input asp-for="Projeto!.DtLimite" name="DtLimite" type="date" placeholder="DataLimite" required disabled="@readOnly" />
-
-        @if (!readOnly)
+    <div class="col-md-6">
+        @if (Action == "Create")
         {
-            @if (Action == "Create")
-            {
-                <input type="submit" value="Criar" />
-                <hr />
-                <input type="file" id="inputImagens" multiple onchange="carregarImagens(this)" required />
-                <input type="file" id="imagensSubmit" asp-for="ImagemsUpload" style="display:none" />
-            }
-            else if (Action == "Edit")
-            {
-                <input asp-for="Projeto!.DtCriacao" name="DtCriacao" type="text" placeholder="Data de criação" disabled />
-                <input asp-page-handler="Update" type="submit" value="Salvar" />
-            }
+            <div id="previewImagens">
+                <div class="previewPlaceholder" onclick="document.getElementById('inputImagens').click()">
+                    <button class="btn btn-primario">
+                        <img src="@Url.Content("~/svg/image.svg")"/>
+                        &nbsp; Adicionar Imagem
+                    </button>
+                </div>
+            </div>
+            <input type="file" id="inputImagens" onchange="carregarImagens(this)" required style="display:none;" />
+            <div id="previewImageGallery">
+                <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagens').click()">
+                    <button class="btn btn-primario">
+                        <img src="@Url.Content("~/svg/image.svg")" />
+                        +
+                    </button>
+                </div>
+            </div>
             
         }
-    </form>
-    @if (Action == "Create")
-    {
-        <hr />
-        <h1>Imagens</h1>
-        <div id="previewImagens" style="display:flex;justify-content:center"></div>
-    }
-    else if (Action == "Edit")
-    {
-        @if (!readOnly)
+        else if (Action == "Edit")
         {
-            <hr/>
-            <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data">
-                <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
-                <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
-            </form>
-        }
+            @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
+            {
 
-        <!-- Exibição das imagens já salvas no banco de dados -->
-        <hr />
-        <h1>Imagens</h1>
-        @if (Model.ImagemProjeto != null && Model.ImagemProjeto.Count > 0)
-        {
-            <div style="display:flex;justify-content:center">
-                @foreach (var imagem in Model.ImagemProjeto)
-                {
-                    <div>
+                <div id="previewImagens">
+                    @if (!readOnly)
+                    {
+                        <form id="deleteForm" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImagemProjeto[0].Imagem ?? new byte[0])" alt="Imagem do Projeto" />
+                            <input type="hidden" name="IdImagem" id="imageId" value="@Model.ImagemProjeto[0].Id" />
+                            <button type="submit" class="btn btn-danger img-lixeira">Excluir</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div id="Images" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImagemProjeto[0].Imagem ?? new byte[0])" alt="Imagem do Projeto" />
+                        </div>
+                    }
+                </div>
+                <div id="previewImageGallery">
+
+                    @for (int i = 1; i < Model.ImagemProjeto.Count(); i++)
+                    {
+                        var imagem = Model.ImagemProjeto[i];
                         @if (!readOnly)
                         {
-                            <form id="deleteForm" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            <form id="deleteForm" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" />
                                 <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
-                                <button type="submit" class="btn btn-danger">Excluir</button>
+                                <button type="submit" class="btn btn-danger img-lixeira">Excluir</button>
                             </form>
                         }
                         else
                         {
-                            <div id="Images" method="post" asp-page-handler="DeleteImage" style="display:flex;flex-direction:column;margin:10px;height:200px">
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
+                            <div id="Images" method="post" asp-page-handler="DeleteImage" class="imageContainer">
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" />
                             </div>
                         }
-                    </div>
+                    }
+
+                    @if (Model.ImagemProjeto.Count() < 5 && !readOnly)
+                    {
+                        <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagensEdit').click()">
+                            <button class="btn btn-primario">
+                                <img src="@Url.Content("~/svg/image.svg")" />
+                                +
+                            </button>
+                        </div>
+
+                        <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data" style="display:none;">
+                            <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+                            <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+                        </form>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>Nenhuma imagem disponível para este projeto.</p>
+            }            
+        }
+    </div>
+    <div class="col-md-6">
+        <form method="post" enctype="multipart/form-data" onsubmit="return validarEnvio();">
+            <div class="form-floating input-container">
+                <input asp-for="Projeto!.Titulo" name="Titulo" type="text" id="frmTitulo" class="form-control" required disabled="@readOnly" />
+                <label for="frmTitulo">Titulo</label>
+            </div>
+            <div class="form-floating input-container">
+                <textarea asp-for="Projeto!.Descricao" name="Descricao" id="frmDescricao" class="form-control  " required disabled="@readOnly" style="background-color: #123252;border-color: #123252;color: white;height:100px;resize:none"></textarea>
+                <label for="frmDescricao">Descrição</label>
+            </div>
+            <div class="input-50-container">
+                <div class="form-floating" style="margin:0">
+                    <input asp-for="Projeto!.Meta" name="Meta" type="number" id="frmMeta" class="form-control  " required disabled="@readOnly" />
+                    <label for="frmMeta">Meta</label>
+                </div>
+                <div class="form-floating" style="margin:0">
+                    <input asp-for="Projeto!.DtLimite" name="DtLimite" type="date" id="frmDtLimite" class="form-control  "  required disabled="@readOnly" />
+                    <label for="frmDtLimite">Data Limite</label>
+                </div>
+            </div>
+            <div class="input-button-container" style="display:flex;justify-content:center;">
+                <a class="btn btn-azul">Voltar</a>
+                @if (Action == "Create")
+                {
+                    <input type="file" id="imagensSubmit" asp-for="ImagemsUpload" style="display:none" />
+                    <input type="submit" value="Criar" class="btn btn-verde" />
+                }
+                else if (Action == "Edit")
+                {
+                    <input asp-page-handler="Update" type="submit" value="Salvar" class="btn btn-verde" />
                 }
             </div>
-        }
-        else 
-        {
-            <p>Nenhuma imagem disponível para este projeto.</p>
-        }
 
-        <!-- Botão para depósito de dinheiro -->
-    }
+        </form>
+    </div>
+
 
 
 </div>
@@ -96,30 +231,58 @@
     var qntImg = 0;
 
     function carregarImagens(input) {
-        var container = document.getElementById('previewImagens');
-
-        // Adiciona as novas imagens ao array imagensSelecionadas
-        for (let i = 0; i < input.files.length; i++) {
-            let file = input.files[i];
-            imagensSelecionadas.push(file); // Adiciona a imagem à lista de arquivos
-
-            // Cria o preview da imagem
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                var imgPreview = document.createElement("div");
-                imgPreview.setAttribute("data-index", imagensSelecionadas.length - 1); // Índice baseado no array
-
-                imgPreview.innerHTML = `
-                    <div style="display:flex;flex-direction:column;margin:10px;height:200px">
-                        <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                        <button class="btn btn-danger" type="button" onclick="removerImagem(${imagensSelecionadas.length - 1})">Remover</button>
-                    </div>`;
-                container.appendChild(imgPreview);
-            };
-            reader.readAsDataURL(file);
+        if (imagensSelecionadas.length == 5){
+            document.getElementById('MensagemContainer').innerHTML = '<div class="alert alert-danger">Quantidade limite de imagens atingido!</div>'
         }
+        else{
+            var container = document.getElementById('previewImagens');
+            // Adiciona as novas imagens ao array imagensSelecionadas
+            for (let i = 0; i < input.files.length; i++) {
+                let file = input.files[i];
+                imagensSelecionadas.push(file); // Adiciona a imagem à lista de arquivos
 
-        atualizarImagensSubmit(); // Atualiza o campo escondido com os arquivos selecionados
+                // Cria o preview da imagem
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    var imgPreview = document.createElement("div");
+                    imgPreview.className = "imageContainer"
+                    imgPreview.setAttribute("data-index", imagensSelecionadas.length - 1); // Índice baseado no array
+
+                    imgPreview.innerHTML = `
+                            <img src="${e.target.result}" />
+                            <button class="btn btn-danger img-lixeira" type="button" onclick="removerImagem(${imagensSelecionadas.length - 1})">Remover</button>`;
+                    if (imagensSelecionadas.length === 1) {
+                        container.innerHTML = '';
+                        container.append(imgPreview);
+                    }
+                    else
+                        document.getElementById('previewImageGallery').appendChild(imgPreview);
+
+                    var gallery = document.getElementById('previewImageGallery');
+                    var atual = document.getElementById('previewPlaceholder2');
+                    if (atual !== null)
+                        gallery.removeChild(atual);
+                    if (imagensSelecionadas.length < 5){
+                        
+                        var inputNextImg = document.createElement("div");
+                        inputNextImg.className = "previewPlaceholder2";
+                        inputNextImg.id = "previewPlaceholder2";
+                        inputNextImg.addEventListener('click', () => {
+                            document.getElementById('inputImagens').click();
+                        }); 
+                        inputNextImg.innerHTML = `
+                                        <button class="btn btn-primario">
+                                            <img src="@Url.Content("~/svg/image.svg")"/>
+                                                +
+                                        </button>`;
+                        gallery.appendChild(inputNextImg);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+
+            atualizarImagensSubmit(); 
+        }
     }
 
     function atualizarImagensSubmit() {
@@ -129,10 +292,11 @@
 
         // Atualiza o campo escondido
         document.getElementById('imagensSubmit').files = dataTransfer.files;
+
+        document.getElementById('inputImagens').value = '';
     }
 
     function removerImagem(index) {
-        console.log(imagensSelecionadas.length)
         if (imagensSelecionadas.length <= 1) {
             document.getElementById('MensagemContainer').innerHTML = '<div class="alert alert-danger">Deve conter ao menos uma imagem!</div>'
         }
@@ -143,19 +307,43 @@
             var container = document.getElementById('previewImagens');
             container.innerHTML = ''; // Limpa o preview
 
+            document.getElementById('previewImageGallery').innerHTML = '';
+
             // Recria o preview de acordo com as imagens restantes
             imagensSelecionadas.forEach((file, i) => {
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     var imgPreview = document.createElement("div");
-                    imgPreview.setAttribute("data-index", i);
+                    imgPreview.className = "imageContainer"
+                    imgPreview.setAttribute("data-index", imagensSelecionadas.length - 1); // Índice baseado no array
 
                     imgPreview.innerHTML = `
-                        <div style="display:flex;flex-direction:column;margin:10px;height:200px">
-                            <img src="${e.target.result}" style="width: 100%; max-width: 400px; margin-bottom: 20px;height:100%" />
-                            <button class="btn btn-danger" type="button" onclick="removerImagem(${i})">Remover</button>
-                        </div>`;
-                    container.appendChild(imgPreview);
+                            <img src="${e.target.result}" />
+                            <button class="btn btn-danger img-lixeira" type="button" onclick="removerImagem(${i})">Remover</button>`;
+                    if(i === 0)
+                        container.appendChild(imgPreview);
+                    else
+                        document.getElementById('previewImageGallery').appendChild(imgPreview);
+
+                    var gallery = document.getElementById('previewImageGallery');
+                    var atual = document.getElementById('previewPlaceholder2');
+                    if (atual !== null)
+                        gallery.removeChild(atual);
+                    if (imagensSelecionadas.length < 5) {
+
+                        var inputNextImg = document.createElement("div");
+                        inputNextImg.className = "previewPlaceholder2";
+                        inputNextImg.id = "previewPlaceholder2";
+                        inputNextImg.addEventListener('click', () => {
+                            document.getElementById('inputImagens').click();
+                        });
+                        inputNextImg.innerHTML = `
+                                            <button class="btn btn-primario">
+                                                <img src="@Url.Content("~/svg/image.svg")"/> 
+                                                +
+                                            </button>`;
+                        gallery.appendChild(inputNextImg);
+                    }
                 };
                 reader.readAsDataURL(file);
             });

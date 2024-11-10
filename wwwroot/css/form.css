@@ -2,13 +2,13 @@
     color: #fff;
     text-align: left;
 }
-input[type=text], input[type=password], input[type=email] {
+input[type=text], input[type=password], input[type=email], input[type=number], input[type=date] {
     background-color: #123252;
     border-color: #123252;
     color: white;
 }
 
-    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=email]:after {
+    input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=number]:focus, input[type=date]:focus {
         border: none;
         background-color: #123252;
         color: white;
