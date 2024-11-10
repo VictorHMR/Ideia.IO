@@ -101,22 +101,22 @@
         }
     </div>
     <div class="col-md-6">
-        <form method="post" enctype="multipart/form-data" onsubmit="return validarEnvio();">
+        <form method="post" asp-action="../Privacy" enctype="multipart/form-data" onsubmit="return validarEnvio();">
             <div class="form-floating input-container">
-                <input asp-for="Projeto!.Titulo" name="Titulo" type="text" id="frmTitulo" class="form-control" required disabled="@readOnly" />
+                <input class="form-control" id="frmTitulo" asp-for="Projeto!.Titulo" name="Titulo" type="text" required disabled="@readOnly" />
                 <label for="frmTitulo">Titulo</label>
             </div>
             <div class="form-floating input-container">
-                <textarea asp-for="Projeto!.Descricao" name="Descricao" id="frmDescricao" class="form-control  " required disabled="@readOnly" style="background-color: #123252;border-color: #123252;color: white;height:100px;resize:none"></textarea>
+                <textarea asp-for="Projeto!.Descricao" name="Descricao" id="frmDescricao" class="form-control" required disabled="@readOnly" style="background-color: #123252;border-color: #123252;color: white;height:100px;resize:none"></textarea>
                 <label for="frmDescricao">Descrição</label>
             </div>
             <div class="input-50-container">
                 <div class="form-floating" style="margin:0">
-                    <input asp-for="Projeto!.Meta" name="Meta" type="number" id="frmMeta" class="form-control  " required disabled="@readOnly" />
+                    <input asp-for="Projeto!.Meta" name="Meta" type="number" id="frmMeta" class="form-control" required disabled="@readOnly" />
                     <label for="frmMeta">Meta</label>
                 </div>
                 <div class="form-floating" style="margin:0">
-                    <input asp-for="Projeto!.DtLimite" name="DtLimite" type="date" id="frmDtLimite" class="form-control  "  required disabled="@readOnly" />
+                    <input asp-for="Projeto!.DtLimite" name="DtLimite" type="date" id="frmDtLimite" class="form-control"  required disabled="@readOnly" />
                     <label for="frmDtLimite">Data Limite</label>
                 </div>
             </div>

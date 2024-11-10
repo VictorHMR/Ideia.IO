@@ -81,3 +81,25 @@
 .btn-azul:hover {
     color: #FFF;
 }
+
+.bookmark-checkbox {
+    display: none;
+}
+
+.icon-bookmark .bookmark-icon {
+    display: block;
+}
+
+.icon-bookmark .bookmark-fill-icon {
+    display: none;
+}
+
+.bookmark-checkbox:checked + label .bookmark-icon {
+    display: none;
+}
+
+.bookmark-checkbox:checked + label .bookmark-fill-icon {
+    display: block;
+}
+
+

@@ -2,7 +2,8 @@
 @using System.Security.Claims
 @model Ideia.IO.Pages.Projetos.ProjetosModel
 @{
-    bool ReadOnly = Model.Projeto.IdUsuAutor != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    bool Logged = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0") != 0;
+    bool ReadOnly = Logged ? Model.Projeto.IdUsuAutor != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) : true;
     bool PodeContribuir = @Model.Projeto.DtLimite > DateTime.Now;
     int qntContribuidores = Model.Transacoes.Select(x => x.IdUsuario).Distinct().Count();
     string Meta = Model.Projeto.Meta?.ToString("C") ?? "";
@@ -53,6 +54,23 @@
                 <p class="p-white-subtitle">Termina em: @Model.Projeto.DtLimite?.ToString("dd/MM/yyyy")</p>
             </div>
             <div class="row" style="margin-bottom:155px;display:flex;gap: 10px;">
+                @if (Logged)
+                {
+                    <form id="salvarProjeto" class="col-md-1" style="display:flex;justify-content:center;align-items:center" method="post" asp-page-handler="Salvar">
+                        <button id="bookmarkButton" class="bookmark-button" >
+                            @if (Model.Projeto.Salvo)
+                            {
+                                <img src="@Url.Content("~/svg/bookmark-fill.svg")" class="bookmark-icon" alt="Remover dos Salvos" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/svg/bookmark.svg")" class="bookmark-icon" alt="Adicionar dos Salvos" />
+                            }
+                        </button>
+                        <input type="hidden" name="salvar" value="@(Model.Projeto.Salvo ? "false" : "true")" />
+                    </form>
+                    
+                }
                 @if (PodeContribuir)
                 {
                     <button class="btn btn-success btn-sm col-md-3" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
@@ -131,4 +149,12 @@
     contribuirModal.addEventListener('show.bs.modal', function (event) {
     const button = event.relatedTarget;
     });
+
+    function toggleBookmark() {
+        const bookmarkIcon = document.querySelector(".bookmark-icon");
+        const bookmarkFillIcon = document.querySelector(".bookmark-fill-icon");
+
+        bookmarkIcon.style.display = bookmarkIcon.style.display === "none" ? "block" : "none";
+        bookmarkFillIcon.style.display = bookmarkFillIcon.style.display === "none" ? "block" : "none";
+    }
 </script>

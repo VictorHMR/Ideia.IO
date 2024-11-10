@@ -6,13 +6,20 @@
 <div class="text-center containerPesquisa">
     <div class="HeaderPesquisa">
         <div class="HeaderPesquisa-Item">
-            @if (Model.Pesquisa.Local == LocalPesquisa.MinhasContribuicoes)
+            @switch (Model.Pesquisa.Local)
             {
-                <h2>Minhas contribuições</h2>
-            }
-            else
-            {   
-                <h2>Pesquisa</h2>
+                case LocalPesquisa.MinhasContribuicoes:
+                    <h2>Minhas contribuições</h2>
+                    break;
+                case LocalPesquisa.Salvos:
+                    <h2>Projetos Salvos</h2>
+                    break;
+                case LocalPesquisa.MeusProjetos:
+                    <h2>Meus Projetos</h2>
+                    break;
+                default:
+                    <h2>Pesquisa</h2>
+                    break;
             }
             <h3>Total de Projetos: @Model.TotalProj</h3>
         </div>
@@ -71,7 +78,7 @@
         {
             <button id="btnAnterior" class="btn btn-danger" onclick="PaginaAnterior()">Anterior</button>
         }
-        @if(Model.Pesquisa.Pagina != Model.TotalPaginas)
+        @if(Model.Pesquisa.Pagina != Model.TotalPaginas && Model.TotalPaginas != 0)
         {
             <button id="btnProximo" class="btn btn-danger" onclick="ProximaPagina()">Proxima</button>
         }

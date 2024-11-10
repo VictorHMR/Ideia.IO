@@ -22,9 +22,12 @@ namespace Ideia.IO.Pages.Projetos
         }
         public IActionResult OnGet(int IdProjeto)
         {
+            int IdUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
             Projeto = _db.Projeto.Find(IdProjeto);
             if (Projeto is not null)
             {
+                Projeto.Salvo = _db.ProjetoSalvo.Any(x => x.IdProjeto == IdProjeto && x.IdUsuario == IdUsuario);
                 Projeto.Visitas++;
                 _db.SaveChanges();
                 ImagemProjeto = _db.ImagemProjeto.Where(x => x.IdProjeto == IdProjeto).ToList();
@@ -85,6 +88,26 @@ namespace Ideia.IO.Pages.Projetos
             }
 
             return RedirectToPage("/Index");
+        }
+
+        public IActionResult OnPostSalvar(int IdProjeto, bool salvar)
+        {
+            int IdUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            Projeto Projeto = _db.Projeto.Find(IdProjeto);
+            if (Projeto is not null)
+            {
+                ProjetoSalvo? projSalvo = _db.ProjetoSalvo.FirstOrDefault(x => x.IdProjeto == IdProjeto && x.IdUsuario == IdUsuario);
+                if (salvar && projSalvo is null)
+                    _db.ProjetoSalvo.Add(new ProjetoSalvo { IdProjeto = IdProjeto, IdUsuario = IdUsuario });
+                else
+                    _db.ProjetoSalvo.Remove(projSalvo);
+                _db.SaveChanges();
+            }
+            else
+            {
+                TempData["Fail"] = "Projeto não existe";
+            }
+            return RedirectToPage();
         }
     }
 }

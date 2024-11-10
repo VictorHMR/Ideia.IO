@@ -39,6 +39,12 @@ namespace Ideia.IO.Pages.Projetos
                 case LocalPesquisa.MeusProjetos:
                     ListarMeusProjetos();
                     break;
+                case LocalPesquisa.Salvos:
+                    ListarProjetosSalvos();
+                    break;
+                default:
+                    ListarProjetos();
+                    break;
 
             }
         }
@@ -97,6 +103,23 @@ namespace Ideia.IO.Pages.Projetos
             CarregarDadosAdicionais();
         }
 
+        public void ListarProjetosSalvos()
+        {
+            int idUsuario = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            List<int>? ProjetosSalvos = _db.ProjetoSalvo.Where(x => x.IdUsuario == idUsuario).Select(x => x.IdProjeto).Distinct().ToList();
+
+            TotalProj = string.IsNullOrEmpty(Pesquisa.Pesquisa)
+                ? LstProjetos.Where(x => ProjetosSalvos.Contains(x.Id)).Count()
+                : LstProjetos.Where(x => ProjetosSalvos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Count();
+
+            TotalPaginas = (int)Math.Ceiling(TotalProj / (double)Pesquisa.ItemsPorPagina);
+
+            LstProjetos = string.IsNullOrEmpty(Pesquisa.Pesquisa)
+                ? LstProjetos?.Where(x => ProjetosSalvos.Contains(x.Id)).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList()
+                : LstProjetos?.Where(x => ProjetosSalvos.Contains(x.Id) && (x.Titulo.Contains(Pesquisa.Pesquisa) || x.Descricao.Contains(Pesquisa.Pesquisa))).Skip((Pesquisa.Pagina - 1) * Pesquisa.ItemsPorPagina).Take(Pesquisa.ItemsPorPagina).ToList();
+
+            CarregarDadosAdicionais();
+        }
 
         internal void CarregarListaOrdenada()
         {

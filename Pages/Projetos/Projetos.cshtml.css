@@ -40,3 +40,19 @@ h1{
     margin: 0 0 0 7px;
     color: #FFDD00;
 }
+
+
+.bookmark-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookmark-icon {
+    width: 40px;
+    height: 40px;
+}

@@ -15,6 +15,7 @@ namespace Ideia.IO.Database
         public DbSet<Projeto> Projeto { get; set; }
         public DbSet<ImagemProjeto> ImagemProjeto { get; set; }
         public DbSet<Transacao> Transacao { get; set; }
+        public DbSet<ProjetoSalvo> ProjetoSalvo { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -159,6 +160,26 @@ namespace Ideia.IO.Database
 
             modelBuilder.Entity<Transacao>()
                .Property(x => x.IdProjeto);
+
+
+            modelBuilder.Entity<ProjetoSalvo>()
+                .ToTable("ProjetoSalvo");
+
+            modelBuilder.Entity<ProjetoSalvo>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<ProjetoSalvo>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<ProjetoSalvo>()
+                .Property(x => x.IdUsuario)
+                .IsRequired();
+
+            modelBuilder.Entity<ProjetoSalvo>()
+                .Property(x => x.IdProjeto)
+                .IsRequired();
 
         }
     }
