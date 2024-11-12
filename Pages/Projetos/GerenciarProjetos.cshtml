@@ -19,18 +19,16 @@
         {
             <div id="previewImagens">
                 <div class="previewPlaceholder" onclick="document.getElementById('inputImagens').click()">
-                    <button class="btn btn-primario">
-                        <img src="@Url.Content("~/svg/image.svg")"/>
-                        &nbsp; Adicionar Imagem
+                    <button class="btn btn-primario" style="padding: 10px 5px">
+                        <img src="@Url.Content("~/svg/image-add.svg")"/>
                     </button>
                 </div>
             </div>
             <input type="file" id="inputImagens" onchange="carregarImagens(this)" required style="display:none;" />
             <div id="previewImageGallery">
                 <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagens').click()">
-                    <button class="btn btn-primario">
-                        <img src="@Url.Content("~/svg/image.svg")" />
-                        +
+                    <button class="btn btn-primario" style="padding: 10px 5px">
+                        <img src="@Url.Content("~/svg/image-add.svg")" />
                     </button>
                 </div>
             </div>
@@ -47,7 +45,9 @@
                         <form id="deleteForm" method="post" asp-page-handler="DeleteImage" class="imageContainer">
                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImagemProjeto[0].Imagem ?? new byte[0])" alt="Imagem do Projeto" />
                             <input type="hidden" name="IdImagem" id="imageId" value="@Model.ImagemProjeto[0].Id" />
-                            <button type="submit" class="btn btn-danger img-lixeira">Excluir</button>
+                            <button type="submit" class="img-lixeira">
+                                <img style="width:100%;height:100%;min-height:0;" src="@Url.Content("~/svg/delete-fill.svg")" />
+                            </button>
                         </form>
                     }
                     else
@@ -67,7 +67,9 @@
                             <form id="deleteForm" method="post" asp-page-handler="DeleteImage" class="imageContainer">
                                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagem.Imagem)" alt="Imagem do Projeto" />
                                 <input type="hidden" name="IdImagem" id="imageId" value="@imagem.Id" />
-                                <button type="submit" class="btn btn-danger img-lixeira">Excluir</button>
+                                <button type="submit" class="btn btn-vermelho img-lixeira">
+                                    <img style="width:100%;height:100%;min-height:0;" src="@Url.Content("~/svg/delete-fill.svg")" />
+                                </button>
                             </form>
                         }
                         else
@@ -81,9 +83,8 @@
                     @if (Model.ImagemProjeto.Count() < 5 && !readOnly)
                     {
                         <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagensEdit').click()">
-                            <button class="btn btn-primario">
-                                <img src="@Url.Content("~/svg/image.svg")" />
-                                +
+                            <button class="btn btn-primario" style="padding: 10px 5px;display">
+                                <img src="@Url.Content("~/svg/image-add.svg")" />
                             </button>
                         </div>
 
@@ -121,15 +122,24 @@
                 </div>
             </div>
             <div class="input-button-container" style="display:flex;justify-content:center;">
-                <a class="btn btn-azul">Voltar</a>
+                <a class="btn btn-voltar">
+                    <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/arrow-back.svg")" />
+                    Voltar
+                </a>
                 @if (Action == "Create")
                 {
                     <input type="file" id="imagensSubmit" asp-for="ImagemsUpload" style="display:none" />
-                    <input type="submit" value="Criar" class="btn btn-verde" />
+                    <button type="submit" class="btn btn-verde">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/notepad-add.svg")" />
+                        Criar
+                    </button>
                 }
                 else if (Action == "Edit")
                 {
-                    <input asp-page-handler="Update" type="submit" value="Salvar" class="btn btn-verde" />
+                    <button asp-page-handler="Update" type="submit" class="btn btn-verde">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/notepad-edit.svg")" />
+                        Salvar
+                    </button>
                 }
             </div>
 
@@ -163,7 +173,9 @@
 
                     imgPreview.innerHTML = `
                             <img src="${e.target.result}" />
-                            <button class="btn btn-danger img-lixeira" type="button" onclick="removerImagem(${imagensSelecionadas.length - 1})">Remover</button>`;
+                            <button class="img-lixeira" type="button" onclick="removerImagem(${imagensSelecionadas.length - 1})">
+                                <img style="width:100%;height:100%;min-height:0;" src="@Url.Content("~/svg/delete-fill.svg")" />
+                             </button>`;
                     if (imagensSelecionadas.length === 1) {
                         container.innerHTML = '';
                         container.append(imgPreview);
@@ -184,9 +196,8 @@
                             document.getElementById('inputImagens').click();
                         }); 
                         inputNextImg.innerHTML = `
-                                        <button class="btn btn-primario">
-                                            <img src="@Url.Content("~/svg/image.svg")"/>
-                                                +
+                                        <button class="btn btn-primario" style="padding: 10px 5px">
+                                            <img src="@Url.Content("~/svg/image-add.svg")"/>
                                         </button>`;
                         gallery.appendChild(inputNextImg);
                     }
@@ -232,7 +243,9 @@
 
                     imgPreview.innerHTML = `
                             <img src="${e.target.result}" />
-                            <button class="btn btn-danger img-lixeira" type="button" onclick="removerImagem(${i})">Remover</button>`;
+                            <button class="img-lixeira" type="button" onclick="removerImagem(${i})">
+                                <img style="width:100%;height:100%;min-height:0;" src="@Url.Content("~/svg/delete-fill.svg")" />
+                            </button>`;
                     if(i === 0)
                         container.appendChild(imgPreview);
                     else
@@ -251,9 +264,8 @@
                             document.getElementById('inputImagens').click();
                         });
                         inputNextImg.innerHTML = `
-                                            <button class="btn btn-primario">
-                                                <img src="@Url.Content("~/svg/image.svg")"/> 
-                                                +
+                                            <button class="btn btn-primario" style="padding: 10px 5px">
+                                                <img src="@Url.Content("~/svg/image-add.svg")"/> 
                                             </button>`;
                         gallery.appendChild(inputNextImg);
                     }

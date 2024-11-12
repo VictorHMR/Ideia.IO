@@ -16,16 +16,13 @@
 
     .btn img {
         width: 25px;
+        margin-right: 5px;
     }
 
-    /* Efeito ao passar o mouse */
-    .btn:hover {
-        transform: scale(1.05);
-    }
-.btn-primario {
-    background: #FFDD00;
-    color: #000;
+.btn:hover {
+    transform: scale(1.05);
 }
+
 .btn-transparent {
     display: flex;
     align-items: center;
@@ -62,29 +59,43 @@
         color: white;
         transform: scale(1.05);
     }
+.btn-primario {
+    background: #FFDD00;
+    color: #000;
+    padding: 10px 40px;
+    margin-top: 10px;
+}
 .btn-verde {
     background-color: #09310A;
     color: #FFF;
-    padding: 10px 50px;
+    padding: 10px 40px;
     margin-top: 10px;
 }
 .btn-verde:hover{
     color: #FFF;
 }
 
-.btn-azul {
+.btn-azul, .btn-voltar {
     background-color: #123252;
     color: #FFF;
-    padding: 10px 50px;
+    padding: 10px 40px;
     margin-top: 10px;
 }
-.btn-azul:hover {
+.btn-voltar {
+    padding: 10px 35px;
+}
+    .btn-azul:hover, .btn-voltar:hover, .btn-vermelho:hover {
+        color: #FFF;
+    }
+.btn-vermelho {
+    background-color: #460D0D;
     color: #FFF;
+    padding: 10px 40px;
+    margin-top: 10px;
 }
-
-.bookmark-checkbox {
-    display: none;
-}
+    .bookmark-checkbox {
+        display: none;
+    }
 
 .icon-bookmark .bookmark-icon {
     display: block;

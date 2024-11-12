@@ -73,12 +73,19 @@
                 }
                 @if (PodeContribuir)
                 {
-                    <button class="btn btn-success btn-sm col-md-3" data-bs-toggle="modal" data-bs-target="#contribuirModal">Contribuir</button>
+                    <button class="btn btn-verde col-md-3" data-bs-toggle="modal" data-bs-target="#contribuirModal">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/notepad-money.svg")" />
+                        Contribuir
+                    </button>
                 }
                 @if (!ReadOnly)
                 {
-                    <a class="btn btn-primario col-md-3"  asp-page="/Projetos/GerenciarProjetos" asp-route-IdProjeto="@Model.Projeto.Id" asp-route-Action="Edit">Editar</a>
-                    <button class="btn btn-danger col-md-3" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    <a class="btn btn-primario col-md-3"  asp-page="/Projetos/GerenciarProjetos" asp-route-IdProjeto="@Model.Projeto.Id" asp-route-Action="Edit">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/notepad-edit-black.svg")" />
+                        Editar
+                    </a>
+                    <button class="btn btn-vermelho col-md-3" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/delete-fill.svg")" />
                         Excluir
                     </button>
                 }
@@ -106,14 +113,20 @@
             </div>
             <div class="modal-body">
                 Com quanto deseja contribuir para o projeto <span id="projectName"></span>?
-            </div>
-            <div class="modal-footer">
                 <form id="contribuirForm" method="post" asp-page-handler="Contribuir">
                     <input type="hidden" name="IdProjeto" id="projectId" value="@Model.Projeto.Id" />
-                    <input type="number" name="Valor" id="valorContribuicao" placeholder="Valor" />
-                    <button type="submit" class="btn btn-success">Confirmar</button>
+                    <input class="form-control" type="number" name="Valor" id="valorContribuicao" placeholder="Valor" />
                 </form>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+            <div class="modal-footer" style="display:flex;justify-content:center">
+                <button type="button" class="btn btn-vermelho" data-bs-dismiss="modal">
+                    <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/money-cancel.svg")" />
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-verde" onclick="document.getElementById('contribuirForm').submit()">
+                    <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/money-give.svg")" />
+                    Confirmar
+                </button>
             </div>
         </div>
     </div>
@@ -132,12 +145,18 @@
                 <div class="modal-body">
                     Você tem certeza que deseja excluir <span id="projectName">@Model.Projeto.Titulo</span>? Esta ação não pode ser desfeita.
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="display:flex;justify-content:center">
+                    <button type="button" class="btn btn-secondary" style="margin-top:12px" data-bs-dismiss="modal">
+                        <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/arrow-back.svg")" />
+                        Cancelar
+                    </button>
                     <form id="deleteForm" method="post" asp-page-handler="Delete">
                         <input type="hidden" name="IdProjeto" id="projectId" value="@Model.Projeto.Id" />
-                        <button type="submit" class="btn btn-danger">Excluir</button>
+                        <button type="submit" class="btn btn-vermelho">
+                            <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/delete-fill.svg")" />
+                            Excluir
+                        </button>
                     </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

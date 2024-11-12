@@ -47,7 +47,7 @@
                         {
                             <li class="nav-item">
                                 <a class="btn btn-primario" asp-area="" asp-page="/Acesso/Login">
-                                    <img src="@Url.Content("~/svg/person-fill.svg")" />
+                                    <img src="@Url.Content("~/svg/person-fill-black.svg")" />
                                     Entrar
                                 </a>
                             </li>
@@ -77,12 +77,12 @@
                                     <b>@User.FindFirst(ClaimTypes.Name).Value</b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/PerfilGeral">Editar Perfil</a></li>
-                                    <li><a asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null" class="dropdown-item">Criar Projeto</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MeusProjetos">Meus Projetos</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.Salvos">Projetos Salvos</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MinhasContribuicoes">Minhas contribuições</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-page="/Acesso/Logout">Sair</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Acesso/PerfilGeral"><img src="@Url.Content("~/svg/person-fill.svg")" /> Editar Perfil</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Projetos/GerenciarProjetos" asp-route-Action="Create" asp-route-IdProjeto="@null"><img src="@Url.Content("~/svg/notepad-add.svg")" /> Criar Projeto</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MeusProjetos"><img src="@Url.Content("~/svg/notepad.svg")" /> Meus Projetos</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.MinhasContribuicoes"><img src="@Url.Content("~/svg/multi-bookmark.svg")" />Minhas contribuições</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Projetos/Pesquisar" asp-route-Local="@LocalPesquisa.Salvos"><img src="@Url.Content("~/svg/money-give.svg")" />Projetos Salvos</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Acesso/Logout"><img src="@Url.Content("~/svg/person-arrow-back.svg")" />Sair</a></li>
                                 </ul>
                             </li>
                         }

@@ -47,8 +47,12 @@
 
 .imageContainer .img-lixeira {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 1%;
+    top: 3%;
+    padding:0;
+    width:25px;
+    background: none;
+    border:none;
 }
 
 .previewPlaceholder {

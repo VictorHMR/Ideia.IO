@@ -133,5 +133,20 @@ body {
     }
 }
 
+.dropdown-menu{
+    background-color: #292929;
 
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    color: white;
+}
+
+.dropdown-item img{
+    height: 25px;
+    margin-right: 10px;
+}
 
