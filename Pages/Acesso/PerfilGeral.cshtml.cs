@@ -24,6 +24,7 @@ namespace Ideia.IO.Pages.Acesso
 
         public void OnGet()
         {
+            TempData["PaginaAnterior"] = Request.Headers["Referer"].ToString();
             Usuario = _db.Usuario.Find(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
         }
 

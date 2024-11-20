@@ -26,6 +26,7 @@ namespace Ideia.IO.Pages.Projetos
         public IActionResult OnGet(string Action, int? IdProjeto)
         {
             ViewData["Action"] = Action;
+            TempData["PaginaAnterior"] = Request.Headers["Referer"].ToString();
             if (IdProjeto is not null && Action == "Edit")
             {
                 Projeto = _db.Projeto.Find(IdProjeto);

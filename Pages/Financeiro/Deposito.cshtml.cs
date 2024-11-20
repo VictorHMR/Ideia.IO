@@ -17,6 +17,7 @@ namespace Ideia.IO.Pages.Financeiro
         }
         public void OnGet()
         {
+            TempData["PaginaAnterior"] = Request.Headers["Referer"].ToString();
         }
 
         public async Task<IActionResult> OnPostAsync(double Valor)

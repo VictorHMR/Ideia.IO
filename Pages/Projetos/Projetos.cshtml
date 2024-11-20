@@ -113,9 +113,9 @@
             </div>
             <div class="modal-body">
                 Com quanto deseja contribuir para o projeto <span id="projectName"></span>?
-                <form id="contribuirForm" method="post" asp-page-handler="Contribuir">
+                <form id="contribuirForm" method="post" asp-page-handler="Contribuir" style="margin-top:20px;">
                     <input type="hidden" name="IdProjeto" id="projectId" value="@Model.Projeto.Id" />
-                    <input class="form-control" type="number" name="Valor" id="valorContribuicao" placeholder="Valor" />
+                    <input class="form-control" type="number" name="Valor" id="valorContribuicao" placeholder="Valor" style="background-color:white;color:black" />
                 </form>
             </div>
             <div class="modal-footer" style="display:flex;justify-content:center">

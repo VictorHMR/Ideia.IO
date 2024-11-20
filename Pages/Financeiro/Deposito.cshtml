@@ -7,8 +7,20 @@
     {
         <div class="alert alert-danger">@ViewData["Fail"]</div>
     }
-    <form method="post">
-        <input type="number" name="Valor" placeholder="Quanto deseja Depositar ?" min="1" />
-        <input class="btn btn-outline-success" type="submit" value="Depositar" />
+    <form method="post" class="container text-center container-acesso">
+        <div class="form-floating">
+            <input class="form-control" type="number" id="frmValor" name="Valor" placeholder="Quanto deseja Depositar ?" min="1" />
+            <label for="frmEmail">Valor</label>
+        </div>
+        <div class="input-button-container" style="display:flex;justify-content:center;">
+            <a class="btn btn-voltar" href="@TempData["PaginaAnterior"]">
+                <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/arrow-back.svg")" />
+                Voltar
+            </a>
+            <button class="btn btn-verde" type="submit">
+                <img style="width:20px;margin-right:10px;" src="@Url.Content("~/svg/money-give.svg")" />
+                Confirmar
+            </button>
+        </div>
     </form>
 </div>
