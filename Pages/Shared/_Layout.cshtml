@@ -46,7 +46,7 @@
                         @if (!User?.Identity?.IsAuthenticated ?? false)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primario" asp-area="" asp-page="/Acesso/Login">
+                                <a class="btn btn-primario" asp-area="" asp-page="/Acesso/Login" style="margin-top:0;">
                                     <img src="@Url.Content("~/svg/person-fill-black.svg")" />
                                     Entrar
                                 </a>
