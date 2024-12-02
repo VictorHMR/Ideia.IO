@@ -82,22 +82,36 @@
 
                     @if (Model.ImagemProjeto.Count() < 5 && !readOnly)
                     {
-                        <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagensEdit').click()">
-                            <button class="btn btn-primario" style="padding: 10px 5px;display">
-                                <img src="@Url.Content("~/svg/image-add.svg")" />
-                            </button>
-                        </div>
+                        <div id="previewImagens">
+                            <div class="previewPlaceholder2" id="previewPlaceholder2" onclick="document.getElementById('inputImagensEdit').click()">
+                                <button class="btn btn-primario" style="padding: 10px 5px;display">
+                                    <img src="@Url.Content("~/svg/image-add.svg")" />
+                                </button>
+                            </div>
 
-                        <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data" style="display:none;">
-                            <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
-                            <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
-                        </form>
+                            <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data" style="display:none;">
+                                <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+                                <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+                            </form>
+                        </div>
                     }
                 </div>
             }
             else
             {
-                <p>Nenhuma imagem disponível para este projeto.</p>
+                @if (Model.ImagemProjeto.Count() < 5 && !readOnly)
+                {
+                    <div class="previewPlaceholder" id="previewPlaceholder" onclick="document.getElementById('inputImagensEdit').click()">
+                        <button class="btn btn-primario" style="padding: 10px 5px;display">
+                            <img src="@Url.Content("~/svg/image-add.svg")" />
+                        </button>
+                    </div>
+
+                    <form id="addImageForm" method="post" asp-page-handler="AddImage" enctype="multipart/form-data" style="display:none;">
+                        <input type="hidden" name="IdProjeto" id="projetoId" value="@Model.Projeto.Id" />
+                        <input name="ImagemProjetofrm" id="inputImagensEdit" type="file" multiple onchange="document.getElementById('addImageForm').submit()" />
+                    </form>
+                }
             }            
         }
     </div>
